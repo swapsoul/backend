@@ -1,0 +1,138 @@
+{
+	"info": {
+		"_postman_id": "ff2186fa-b19a-4880-a5ea-16a222f6895d",
+		"name": "Swapsoul",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "product",
+			"item": [
+				{
+					"name": "Get all products",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:4000/api/product",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"api",
+								"product"
+							]
+						},
+						"description": "Get product"
+					},
+					"response": []
+				},
+				{
+					"name": "Add Product",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"productID\": \"2\",\n    \"productName\": \"beta\",\n    \"price\": 65,\n    \"imgURL\": \"https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885_960_720.jpg\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4000/api/product",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"api",
+								"product"
+							]
+						},
+						"description": "product addition"
+					},
+					"response": []
+				},
+				{
+					"name": "Product By Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:4000/api/product/602d6c901ecf1ef8dbe41070",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"api",
+								"product",
+								"602d6c901ecf1ef8dbe41070"
+							]
+						},
+						"description": "Get Product by ID"
+					},
+					"response": []
+				},
+				{
+					"name": "Patch By Id",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"productName\": \"alpha\",\n    \"price\": 50,\n    \"imgURL\": \"https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885_960_720.jpg\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4000/api/product/602d6c901ecf1ef8dbe41070",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"api",
+								"product",
+								"602d6c901ecf1ef8dbe41070"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete By ID",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:4000/api/product/602d6ce21ecf1ef8dbe41071",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"api",
+								"product",
+								"602d6ce21ecf1ef8dbe41071"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
