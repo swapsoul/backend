@@ -9,7 +9,7 @@ var productSchema = mongoose.Schema({
     productName: String,
     price: Number,
     imgURL: String
-});
+}, {collection: 'products'}); // Give specific collection name, otherwise plural name will be used
 // Export Product Model
 var Product = module.exports = mongoose.model('product', productSchema);
 module.exports.get = function (callback, limit) {
