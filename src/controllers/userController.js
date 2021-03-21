@@ -35,13 +35,19 @@ exports.add = function (req, res) {
 };
 // View User
 exports.view = function (req, res) {
-    User.findById(req.params.userEmail, function (err, user) {
-        if (err)
-            res.send(err);
-        res.json({
-            message: 'User Details',
-            data: user
-        });
+    User.findOne({'userEmail': req.params.userEmail}, function (err, user) {
+        // if (err)
+        //     res.send(err);
+        if (user) {
+            res.json({
+                message: 'User Details',
+                data: user.toJSON()
+            });
+        } else {
+            res.status(404).json({
+                message: 'User Not Found'
+            })
+        }
     });
 };
 // Update User
