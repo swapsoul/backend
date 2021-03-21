@@ -43,5 +43,18 @@ router.route("/sample").post(function (req, res) {
         });
     });
 });
+
+//Import User Controller
+var userController = require('./userController');
+// User routes
+router.route('/user')
+   .get(userController.index)
+   .post(userController.add);
+router.route('/user/:userEmail')
+   .get(userController.view)
+   .patch(userController.update)
+   .put(userController.update)
+   .delete(userController.delete);
+
 //Export API routes
 module.exports = router;
