@@ -1,7 +1,7 @@
 //router.js
 //initialize express router
 let router = require('express').Router();
-let authRouter = require('../controllers/authController');
+let authRouter = require('./authController');
 //set default API response
 router.use('/auth', authRouter);
 
