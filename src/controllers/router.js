@@ -24,5 +24,18 @@ router.route('/product/:productID')
     .put(productController.update)
     .delete(productController.delete);
 
+
+ //Import User Controller   
+var userController = require('./userController');
+// User routes
+router.route('/user')
+    .get(userController.index)
+    .post(userController.add);
+router.route('/user/:userEmail')
+    .get(userController.view)
+    .patch(userController.update)
+    .put(userController.update)
+    .delete(userController.delete);
+
 //Export API routes
 module.exports = router;
