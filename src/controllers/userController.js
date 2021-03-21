@@ -79,7 +79,7 @@ exports.update = function (req, res) {
 // Delete User
 exports.delete = function (req, res) {
     User.deleteOne({
-        _id: req.params.userEmail
+        _id: req.params.userEmail 
     }, function (err, contact) {
         if (err)
             res.send(err)
