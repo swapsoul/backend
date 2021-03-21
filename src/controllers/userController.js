@@ -3,17 +3,24 @@
 User = require('../models/userModel');
 //For index
 exports.index = function (req, res) {
-    User.get(function (err, user) {
-        if (err)
+    User.find(function (err, user) {
+        // if (err)
+        //     res.json({
+        //         status: "error",
+        //         message: err
+        //     });
+        if (user) {
             res.json({
-                status: "error",
-                message: err
+                status: "success",
+                message: "Got user Successfully!",
+                data: user
             });
-        res.json({
-            status: "success",
-            message: "Got user Successfully!",
-            data: user
-        });
+        } else {
+            res.status(404).json({
+                status: 'error',
+                message: 'User Not Found'
+            })
+        }
     });
 };
 //For creating new user
@@ -35,7 +42,7 @@ exports.add = function (req, res) {
 };
 // View User
 exports.view = function (req, res) {
-    User.findOne({'userEmail': req.params.userEmail}, function (err, user) {
+    User.findOne({ 'userEmail': req.params.userEmail }, function (err, user) {
         // if (err)
         //     res.send(err);
         if (user) {
@@ -72,7 +79,7 @@ exports.update = function (req, res) {
 // Delete User
 exports.delete = function (req, res) {
     User.deleteOne({
-        _id: req.params.userEmail 
+        _id: req.params.userEmail
     }, function (err, contact) {
         if (err)
             res.send(err)
