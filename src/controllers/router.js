@@ -1,7 +1,10 @@
 //router.js
 //initialize express router
 let router = require('express').Router();
+let authRouter = require('../controllers/authController');
 //set default API response
+router.use('/auth', authRouter);
+
 router.get('/', function(req, res) {
     res.json({
         status: 'API Works',

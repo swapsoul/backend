@@ -1,6 +1,6 @@
 //productController.js
 //Import Product Model
-Product = require('./productModel');
+Product = require('../models/productModel');
 //For index
 exports.index = function (req, res) {
     Product.get(function (err, product) {
