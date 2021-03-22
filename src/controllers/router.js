@@ -26,11 +26,12 @@ router.route('/product/:productID')
 
 const connection = mongoose.connection;
 router.route("/sample").post(function (req, res) {
-    const pinCode = req.body.pincode;
+    const pinCode = parseInt(req.body.pincode);
     console.log("querying db for pincode",pinCode);
     connection.db.collection("b2c_delivery_pincodes", function (err, pincodes) {
         pincodes.find({ pin: pinCode }).toArray(function (err, data) {
-            if (data) {
+            console.log(data)
+            if (data.length!=0) {
                 console.log("Delivery is available");
                 res.json({
                     status: "success",
@@ -41,7 +42,7 @@ router.route("/sample").post(function (req, res) {
                     status: "error",
                     message: err,
                 });
-                console.log("Error is occurreds");
+                console.log("Error is occurred");
             }
         });
     });
