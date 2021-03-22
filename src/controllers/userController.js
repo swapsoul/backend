@@ -27,6 +27,7 @@ exports.index = function (req, res) {
 exports.add = function (req, res) {
     var user = new User();
     user.userEmail = req.body.userEmail ? req.body.userEmail : user.userEmail;
+    user.userName = req.body.userName;
     user.userPassword = req.body.userPassword;
     user.phoneNumber = req.body.phoneNumber;
 
@@ -35,6 +36,7 @@ exports.add = function (req, res) {
         if (err)
             res.json(err);
         res.json({
+            status: "New user Added!",
             message: "New user Added!",
             data: user
         });
@@ -63,6 +65,7 @@ exports.update = function (req, res) {
         if (err)
             res.send(err);
         user.userEmail = req.body.userEmail ? req.body.userEmail : user.userEmail;
+        user.userName = req.body.userName;
         user.userPassword = req.body.userPassword;
         user.phoneNumber = req.body.phoneNumber;
         //save and check errors
