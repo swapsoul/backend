@@ -8,7 +8,7 @@ var userSchema = mongoose.Schema({
     },
     userPassword: String,
     phoneNumber: Number
-});
+}, {collection: 'users'});
 
 var User = module.exports = mongoose.model('users', userSchema);
 module.exports.get = function (callback, limit) {

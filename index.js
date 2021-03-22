@@ -69,6 +69,24 @@ const mongoose = require('mongoose');
 const dbPath = 'mongodb://swapsoul:swap%21123@cluster0-shard-00-00.bz4pl.mongodb.net:27017,cluster0-shard-00-01.bz4pl.mongodb.net:27017,cluster0-shard-00-02.bz4pl.mongodb.net:27017/test?replicaSet=atlas-ydidtn-shard-0&ssl=true&authSource=admin';
 const options = {useNewUrlParser: true, useUnifiedTopology: true}
 const mongo = mongoose.connect(dbPath, options);
+
+process.on('uncaughtException', (error)  => {
+
+    console.log('Something terrible happened: ',  error);
+
+    // process.exit(1); // exit application
+
+})
+
+process.on('unhandledRejection', (error, promise) => {
+    console.log(' Oh Lord! We forgot to handle a promise rejection here: ', promise);
+    console.log(' The error was: ', error );
+});
+
+// process.on('exit', code => {
+//     // Only synchronous calls
+//     console.log(`Process exited with code: ${code}`)
+// })
 mongo.then(() => {
     console.log('connected');
 }).catch(error => {
