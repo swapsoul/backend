@@ -4,15 +4,15 @@ const User = require('../models/userModel');
 exports.verifyToken = (req, res, next) => {
     User.findOne({
         $or: [
-            { username: req.body.usernameOrEmail },
-            { email: req.body.usernameOrEmail }
+            { userName: req.body.usernameOrEmail },
+            { userEmail: req.body.usernameOrEmail }
         ]
     }, (err, user) => {
         if (user) {
             if (req.headers['swapsoultoken']) {
                 let response = commonService.decryptToken(req.headers['swapsoultoken']);
                 console.log(response);
-                if ((user.username === response.usernameOrEmail || user.email === response.usernameOrEmail) && user.password === response.hash) {
+                if ((user.userName === response.usernameOrEmail || user.userEmail === response.usernameOrEmail) && user.userPassword === response.hash) {
                     console.log('Authorized ' + req.body.usernameOrEmail);
                     next();
                 } else {
