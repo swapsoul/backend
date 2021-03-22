@@ -15,5 +15,5 @@ exports.decryptToken = (token) => {
     let username = decryptedSplit[0]
     let password = decryptedSplit.slice(1, decryptedSplit.length).join(':')
 
-    return { username: username, hash: createsha512hash(password) };
+    return { usernameOrEmail: username, hash: createsha512hash(password) };
 }
