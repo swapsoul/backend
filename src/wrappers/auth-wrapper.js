@@ -23,8 +23,8 @@ exports.verifyToken = (req, res, next) => {
                 }
             } else {
                 console.log('Unauthorized ' + req.body.usernameOrEmail);
-                res.status(401).json({
-                    message: 'Unauthorized'
+                res.status(400).json({
+                    message: 'Bad Request'
                 });
             }
         } else {
