@@ -7,13 +7,11 @@ exports.getAllUsers = function (req, res) {
     User.find({}, { _id: 1, phoneNumber: 1, userEmail: 1, userName: 1 }, function (err, user) {
         if (user) {
             res.json({
-                status: "success",
                 message: "Got user Successfully!",
                 data: user
             });
         } else {
             res.status(404).json({
-                status: 'error',
                 message: 'User Not Found'
             })
         }
@@ -64,12 +62,22 @@ exports.addUser = function (req, res) {
                 if (err) {
                     res.status(204).json({
                         message: "User created and email sending failed",
-                        data: user
+                        data: {
+                            _id: user._id,
+                            userName: user.userName,
+                            userEmail: user.userEmail,
+                            phoneNumber: user.phoneNumber
+                        }
                     });
                 } else {
                     res.json({
                         message: "User created and email sent",
-                        data: user
+                        data: {
+                            _id: user._id,
+                            userName: user.userName,
+                            userEmail: user.userEmail,
+                            phoneNumber: user.phoneNumber
+                        }
                     });
                 }
             });
@@ -264,7 +272,7 @@ exports.userVerificationInitEmail = (req, res) => {
                 { userName: req.body.usernameOrEmail },
                 { userEmail: req.body.usernameOrEmail }
             ]
-        }, { _id: 1, userEmail: 1, verificationOtp: 1, verificationOtpTimestamp: 1 }, (err, user) => {
+        }, { _id: 1, userEmail: 1, verificationOtp: 1 }, (err, user) => {
             if (err) {
                 res.status(404).json({
                     message: 'User Not Found'
