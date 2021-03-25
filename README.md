@@ -1,5 +1,12 @@
 # Swapsoul - Backend
 
+## Add following environment variables into system
+- `SMTPHOST`
+- `SMTPPORT`
+- `FromEmail`
+- `EmailPassword`
+- `EmailReplyTo`
+
 ## Backup and Restore
 - Install mongo-tools : `sudo apt install mongo-tools`
 - Run below command to create dump

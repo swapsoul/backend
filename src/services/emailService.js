@@ -13,11 +13,11 @@ function readTemplateWithReplacements(templateNameWithRelativePath, replacements
 }
 
 const mailerConfig = {
-    host: 'smtpout.secureserver.net',
+    host: process.env.SMTPHOST || 'smtpout.secureserver.net',
     secureConnection: true,
-    port: 465,
+    port: process.env.SMTPPORT || 465,
     auth: {
-        user: process.env.FromEmail,
+        user: process.env.FromEmail || 'info@swapsoul.com',
         pass: process.env.EmailPassword
     }
 }
@@ -33,28 +33,27 @@ function sendMail(sendTo, emailSubject, templateName, replacements, attachments,
         from: mailerConfig.auth.user,
         to: typeof sendTo === 'string'? sendTo : sendTo.join(', '),
         subject: emailSubject,
+        replyTo: process.env.EmailReplyTo || 'dev.swapsoul@gmail.com',
         html: readTemplateWithReplacements(path.join(templateStaticPath, templateName), replacements),
         // check here for different kind of attachments https://nodemailer.com/message/attachments/
         attachments: attachmentsObjectArray
     };
 
     mailTransport.sendMail(mailOptions, (err) => {
-       // if (err) {
-       //     console.log('error: ', err);
-       // } else {
-       //     console.log('Mail Sent');
-       // }
        callback(err);
     });
 }
 exports.sendMail = sendMail;
 
+// Only for Testing email
 // sendMail("nitinkumar9054@gmail.com", "Hi From Swapsoul", 'forgotPassword.html', {
 //     name: "Nitin Kumar",
 //     pin: commonService.createOtp(6),
 //     timestamp: new Date().toUTCString()
 // }, ['img/image.jpeg'], (err) => {
 //     if (err) {
-//         console.log(err);
+//         console.log('error: ', err);
+//     } else {
+//         console.log('Mail Sent');
 //     }
 // });
