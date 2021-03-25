@@ -40,6 +40,7 @@ function sendMail(sendTo, emailSubject, templateName, replacements, attachments,
     };
 
     mailTransport.sendMail(mailOptions, (err) => {
+       console.log('error:', err);
        callback(err);
     });
 }
@@ -48,8 +49,8 @@ exports.sendMail = sendMail;
 // Only for Testing email
 // sendMail("nitinkumar9054@gmail.com", "Hi From Swapsoul", 'forgotPassword.html', {
 //     name: "Nitin Kumar",
-//     pin: commonService.createOtp(6),
-//     timestamp: new Date().toUTCString()
+//     passwordOtp: commonService.createOtp(6),
+//     passwordOtpTimestamp: new Date().toUTCString()
 // }, ['img/image.jpeg'], (err) => {
 //     if (err) {
 //         console.log('error: ', err);

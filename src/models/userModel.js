@@ -1,17 +1,32 @@
 //productModel.js
-var mongoose = require('mongoose');
+const mongoose = require('mongoose');
 //schema
-var userSchema = mongoose.Schema({
+const userSchema = mongoose.Schema({
     userEmail: {
         type: String,
         required: true
     },
-    userName: String,
-    userPassword: String,
-    phoneNumber: Number
-}, {collection: 'users'});
+    userName: {
+        type: String,
+        required: true
+    },
+    userPassword: {
+        type: String,
+        required: true
+    },
+    phoneNumber: Number,
+    passwordOtp: String,
+    passwordOtpTimestamp: String,
+    verificationStatus: {
+        type: Boolean,
+        required: true
+    },
+    verificationOtp: String,
+    verificationOtpTimestamp: String,
+    signInMethod: String
+}, { collection: 'users' });
 
-var User = module.exports = mongoose.model('users', userSchema);
+const User = module.exports = mongoose.model('users', userSchema);
 module.exports.get = function (callback, limit) {
     User.find(callback).limit(limit);
 }
