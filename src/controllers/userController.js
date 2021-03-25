@@ -1,6 +1,7 @@
 //UserController.js
 //Import User Model
 User = require('../models/userModel');
+const commonService = require('../services/commonService')
 //For index
 exports.index = function (req, res) {
     User.find(function (err, user) {
@@ -25,21 +26,38 @@ exports.index = function (req, res) {
 };
 //For creating new user
 exports.add = function (req, res) {
-    var user = new User();
+    const token = req.headers['swapsoultoken'];
+    if (token === undefined) {
+        return res.status(400).json({
+            message: 'Bad Request'
+        });
+    }
+    const resp = commonService.decryptToken(token);
+    const user = new User();
     user.userEmail = req.body.userEmail ? req.body.userEmail : user.userEmail;
     user.userName = req.body.userName;
-    user.userPassword = req.body.userPassword;
+    user.userPassword = resp.hash
     user.phoneNumber = req.body.phoneNumber;
 
     //Save and check error
     user.save(function (err) {
-        if (err)
-            res.json(err);
-        res.json({
-            status: "New user Added!",
-            message: "New user Added!",
-            data: user
-        });
+        if (err) {
+            if (err.name === 'MongoError' && err.code === 11000) {
+                res.status(409).json({
+                    message: 'User already exists'
+                })
+            } else {
+                res.status(501).json({
+                    message: 'Something went wrong. Please contact admin of this site.'
+                });
+            }
+        } else {
+            res.json({
+                status: "New user Added!",
+                message: "New user Added!",
+                data: user
+            });
+        }
     });
 };
 // View User
