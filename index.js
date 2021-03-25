@@ -46,7 +46,7 @@ const apiRoutes = require("./src/controllers/router")
 app.use('/api', apiRoutes)
 
 // catch all endpoint which do not match
-app.use((req, res, next) => {
+app.use((req, res, _) => {
     res.status(404).send({
         status: 404,
         error: 'Not found'
@@ -54,9 +54,13 @@ app.use((req, res, next) => {
 });
 
 //error handling
-app.use((err, req, res, next) => {
+app.use((err, req, res, _) => {
     console.log(err);
-    return res.status(500).json({ error: err.toString() });
+    let status = 501;
+    if (err.toString().toLowerCase().includes('invalid')) {
+        status = 400;
+    }
+    return res.status(status).json({ error: err.toString() });
 });
 
 app.use((req, res, next) => {
