@@ -1,9 +1,12 @@
 //router.js
 //initialize express router
 let router = require('express').Router();
-let authRouter = require('./authController');
+const authRouter = require('./authController');
+const userRouter = require('./userController');
+
 //set default API response
 router.use('/auth', authRouter);
+router.use('/user', userRouter);
 
 router.get('/', function(req, res) {
     res.json({
@@ -31,7 +34,7 @@ router.route("/sample").post(function (req, res) {
     connection.db.collection("b2c_delivery_pincodes", function (err, pincodes) {
         pincodes.find({ pin: pinCode }).toArray(function (err, data) {
             console.log(data)
-            if (data.length!=0) {
+            if (data.length !== 0) {
                 console.log("Delivery is available");
                 res.json({
                     status: "success",
@@ -49,16 +52,16 @@ router.route("/sample").post(function (req, res) {
 });
 
 //Import User Controller
-var userController = require('./userController');
-// User routes
-router.route('/user')
-   .get(userController.index)
-   .post(userController.add);
-router.route('/user/:userEmail')
-   .get(userController.view)
-   .patch(userController.update)
-   .put(userController.update)
-   .delete(userController.delete);
+// var userController = require('./userController');
+// // User routes
+// router.route('/user')
+//    .get(userController.index)
+//    .post(userController.add);
+// router.route('/user/:userEmail')
+//    .get(userController.view)
+//    .patch(userController.update)
+//    .put(userController.update)
+//    .delete(userController.delete);
 
 //Export API routes
 module.exports = router;
