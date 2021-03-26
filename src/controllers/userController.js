@@ -11,7 +11,7 @@ userRouter.route('/:usernameOrEmail').get(authWrapper.verifyTokenForRequestWitho
 
 userRouter.route('/resetpassword/:usernameOrEmail').get(userService.resetPasswordSendMail);
 userRouter.route('/resetpassword').put(userService.resetPassword);
-userRouter.route('/verification/:usernameOrEmail').put(authWrapper.verifyToken, userService.userVerificationInitEmail);
+userRouter.route('/verification/:usernameOrEmail').get(authWrapper.verifyTokenForRequestWithoutPayload, userService.userVerificationInitEmail);
 userRouter.route('/verification').put(authWrapper.verifyToken, userService.userVerificationUpdate);
 
 module.exports = userRouter;
