@@ -3,7 +3,7 @@ const handlebars = require('handlebars');
 const fs = require('fs');
 const path = require('path');
 
-const commonService = require('./commonService');
+// const commonService = require('./commonService');
 
 function readTemplateWithReplacements(templateNameWithRelativePath, replacements) {
     const filePath = path.join(__dirname, templateNameWithRelativePath);
@@ -20,7 +20,7 @@ const mailerConfig = {
         user: process.env.FromEmail || 'info@swapsoul.com',
         pass: process.env.EmailPassword
     }
-}
+};
 
 const mailTransport = nodemailer.createTransport(mailerConfig);
 const templateStaticPath = '../static/templates/';

@@ -1,8 +1,9 @@
 //index.js
 const express = require('express');
 const app = express();
-
 const cors = require('cors');
+//import mongoose
+const mongoose = require('mongoose');
 
 const env = process.env.NODE_ENV || 'development';
 const port = process.env.PORT || 4000;
@@ -10,14 +11,18 @@ const port = process.env.PORT || 4000;
 const corsOptions = {
     origin: '*',
     optionsSuccessStatus: 200
-}
+};
+
 app.use(cors(corsOptions));
+
 //import body parser
 const bodyParser = require('body-parser');
+
 //configure bodyparser to hande the post requests
 app.use(bodyParser.urlencoded({
     extended: true
 }));
+
 app.use(bodyParser.json());
 
 app.use((req, res, next) => {
@@ -36,14 +41,16 @@ app.use((req, res, next) => {
 
 // Welcome message
 app.get('/', (req, res) => res.send('Welcome to Express'));
+
 // Launch app to the specified port
 app.listen(port, function () {
     console.log("Running Rest API on Port " + port);
-})
+});
+
 //Import routes
-const apiRoutes = require("./src/controllers/router")
+const apiRoutes = require("./src/controllers/router");
 //Use API routes in the App
-app.use('/api', apiRoutes)
+app.use('/api', apiRoutes);
 
 // catch all endpoint which do not match
 app.use((req, res, _) => {
@@ -70,12 +77,9 @@ app.use((req, res, next) => {
     next(); // Important
 })
 
-
-//import mongoose
-const mongoose = require('mongoose');
 //connect to mongoose
 const dbPath = 'mongodb://swapsoul:swap%21123@cluster0-shard-00-00.bz4pl.mongodb.net:27017,cluster0-shard-00-01.bz4pl.mongodb.net:27017,cluster0-shard-00-02.bz4pl.mongodb.net:27017/test?replicaSet=atlas-ydidtn-shard-0&ssl=true&authSource=admin';
-const options = { useNewUrlParser: true, useUnifiedTopology: true }
+const options = { useNewUrlParser: true, useUnifiedTopology: true };
 const mongo = mongoose.connect(dbPath, options);
 
 process.on('uncaughtException', (error) => {
@@ -95,9 +99,10 @@ process.on('unhandledRejection', (error, promise) => {
 //     console.log(`Process exited with code: ${code}`)
 // })
 
+// Connect to MongoDB
 mongo.then(() => {
     console.log('connected');
-}).catch(error => {
+}).catch((error) => {
     console.log(error, 'error');
     process.exit(1);
 });
