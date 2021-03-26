@@ -80,12 +80,14 @@ const mongo = mongoose.connect(dbPath, options);
 
 process.on('uncaughtException', (error) => {
     console.log('Something terrible happened: ', error);
+    return 'Error Occurred';
     // process.exit(1); // uncomment if you exit application
 })
 
 process.on('unhandledRejection', (error, promise) => {
     console.log(' Oh Lord! We forgot to handle a promise rejection here: ', promise);
     console.log(' The error was: ', error);
+    return 'Error Occurred';
 });
 
 // process.on('exit', code => {

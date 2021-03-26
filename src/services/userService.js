@@ -266,11 +266,11 @@ exports.resetPassword = (req, res) => {
 }
 
 exports.userVerificationInitEmail = (req, res) => {
-    if (commonService.isFieldValid(req.body.usernameOrEmail)) {
+    if (commonService.isFieldValid(req.params.usernameOrEmail)) {
         User.findOne({
             $or: [
-                { userName: req.body.usernameOrEmail },
-                { userEmail: req.body.usernameOrEmail }
+                { userName: req.params.usernameOrEmail },
+                { userEmail: req.params.usernameOrEmail }
             ]
         }, { _id: 1, userName: 1, userEmail: 1 }, (err, user) => {
             if (err) {
@@ -323,7 +323,7 @@ exports.userVerificationUpdate = (req, res) => {
                 { userName: req.body.usernameOrEmail },
                 { userEmail: req.body.usernameOrEmail }
             ]
-        }, { _id: 1, userName: 1, userEmail: 1, verificationOtp: 1 }, (err, user) => {
+        }, { _id: 1, userName: 1, userEmail: 1, verificationOtp: 1, verificationOtpTimestamp: 1}, (err, user) => {
             if (err) {
                 res.status(404).json({
                     message: 'User Not Found'
