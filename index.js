@@ -2,8 +2,9 @@
 const express = require('express');
 const app = express();
 const cors = require('cors');
-//import mongoose
-const mongoose = require('mongoose');
+
+// Establish database connection
+const _ = require('./src/services/dbService');
 
 const env = process.env.NODE_ENV || 'development';
 const port = process.env.PORT || 4000;
@@ -40,7 +41,7 @@ app.use((req, res, next) => {
 });
 
 // Welcome message
-app.get('/', (req, res) => res.send('Welcome to Express'));
+app.get('/', (req, res) => res.send('Welcome to Swapsoul'));
 
 // Launch app to the specified port
 app.listen(port, function () {
@@ -77,11 +78,6 @@ app.use((req, res, next) => {
     next(); // Important
 })
 
-//connect to mongoose
-const dbPath = 'mongodb://swapsoul:swap%21123@cluster0-shard-00-00.bz4pl.mongodb.net:27017,cluster0-shard-00-01.bz4pl.mongodb.net:27017,cluster0-shard-00-02.bz4pl.mongodb.net:27017/test?replicaSet=atlas-ydidtn-shard-0&ssl=true&authSource=admin';
-const options = { useNewUrlParser: true, useUnifiedTopology: true };
-const mongo = mongoose.connect(dbPath, options);
-
 process.on('uncaughtException', (error) => {
     console.log('Something terrible happened: ', error);
     return 'Error Occurred';
@@ -98,11 +94,3 @@ process.on('unhandledRejection', (error, promise) => {
 //     // Only synchronous calls
 //     console.log(`Process exited with code: ${code}`)
 // })
-
-// Connect to MongoDB
-mongo.then(() => {
-    console.log('connected');
-}).catch((error) => {
-    console.log(error, 'error');
-    process.exit(1);
-});

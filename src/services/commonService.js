@@ -8,7 +8,11 @@ exports.createsha512hash = createsha512hash = (password) => {
 
 exports.isFieldValid = isFieldValid = (value) => {
     if (value) {
-        if (String(value).trim().length > 0) {
+        if (typeof value === 'number' || typeof value === 'string') {
+            if (String(value).trim().length > 0) {
+                return true;
+            }
+        } else {
             return true;
         }
     }

@@ -1,4 +1,3 @@
-//productModel.js
 const mongoose = require('mongoose');
 //schema
 const userSchema = mongoose.Schema({

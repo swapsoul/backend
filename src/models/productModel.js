@@ -1,17 +1,25 @@
-//productModel.js
-var mongoose = require('mongoose');
+const mongoose = require('mongoose');
 //schema
-var productSchema = mongoose.Schema({
+const productSchema = mongoose.Schema({
     productID: {
         type: String,
         required: true
     },
     productName: String,
-    price: Number,
-    imgURL: String
+    productDescription: String,
+    productImgURL: String,
+    productColors: Array,
+    productDiscount: Number,
+    productRating: Number,
+    productRatingCount: Number,
+    productRetailPrice: Number,
+    productSalePrice: Number,
+    productSaleTagLine: String,
+    productSizes: Array,
+    productURL: String,
 }, {collection: 'products'}); // Give specific collection name, otherwise plural name will be used
 // Export Product Model
-var Product = module.exports = mongoose.model('product', productSchema);
+const Product = module.exports = mongoose.model('products', productSchema);
 module.exports.get = function (callback, limit) {
     Product.find(callback).limit(limit);
 }
