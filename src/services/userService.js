@@ -170,7 +170,7 @@ exports.resetPasswordSendMail = (req, res) => {
                 { userName: req.params.usernameOrEmail },
                 { userEmail: req.params.usernameOrEmail }
             ]
-        }, { _id: 1, userEmail: 1, passwordOtp: 1, passwordOtpTimestamp: 1 }, (err, user) => {
+        }, { _id: 1, userName: 1, userEmail: 1, passwordOtp: 1, passwordOtpTimestamp: 1 }, (err, user) => {
             if (err) {
                 res.status(404).json({
                     message: 'User Not Found'
@@ -219,7 +219,7 @@ exports.resetPassword = (req, res) => {
                 { userName: req.body.usernameOrEmail },
                 { userEmail: req.body.usernameOrEmail }
             ]
-        }, { _id: 1, userEmail: 1, passwordOtp: 1, passwordOtpTimestamp: 1 }, (err, user) => {
+        }, { _id: 1, userName: 1, userEmail: 1, passwordOtp: 1, passwordOtpTimestamp: 1 }, (err, user) => {
             if (err) {
                 res.status(404).json({
                     message: 'User Not Found'
@@ -272,7 +272,7 @@ exports.userVerificationInitEmail = (req, res) => {
                 { userName: req.body.usernameOrEmail },
                 { userEmail: req.body.usernameOrEmail }
             ]
-        }, { _id: 1, userEmail: 1, verificationOtp: 1 }, (err, user) => {
+        }, { _id: 1, userName: 1, userEmail: 1 }, (err, user) => {
             if (err) {
                 res.status(404).json({
                     message: 'User Not Found'
@@ -323,7 +323,7 @@ exports.userVerificationUpdate = (req, res) => {
                 { userName: req.body.usernameOrEmail },
                 { userEmail: req.body.usernameOrEmail }
             ]
-        }, { _id: 1, userEmail: 1, verificationOtp: 1, verificationOtpTimestamp: 1 }, (err, user) => {
+        }, { _id: 1, userName: 1, userEmail: 1, verificationOtp: 1 }, (err, user) => {
             if (err) {
                 res.status(404).json({
                     message: 'User Not Found'
