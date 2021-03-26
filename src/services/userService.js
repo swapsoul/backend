@@ -4,7 +4,7 @@ const emailService = require('./emailService');
 
 //get all users
 exports.getAllUsers = function (req, res) {
-    User.find({}, { _id: 1, phoneNumber: 1, userEmail: 1, userName: 1 }, function (err, user) {
+    User.find({}, { _id: 1, phoneNumber: 1, userEmail: 1, userName: 1, verificationStatus: 1 }, function (err, user) {
         if (user) {
             res.json({
                 message: "Got user Successfully!",
@@ -92,7 +92,7 @@ exports.getUserByUsernameOrEmail = function (req, res) {
             { userName: req.params.usernameOrEmail },
             { userEmail: req.params.usernameOrEmail }
         ]
-    }, { _id: 1, phoneNumber: 1, userEmail: 1, userName: 1 }, function (err, user) {
+    }, { _id: 1, phoneNumber: 1, userEmail: 1, userName: 1, verificationStatus: 1}, function (err, user) {
         if (err) {
             res.status(404).json({
                 message: 'User Not Found'
