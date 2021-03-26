@@ -1,10 +1,10 @@
 //router.js
 //initialize express router
 let router = require('express').Router();
-const authRouter = require('./authController');
-const userRouter = require('./userController');
-const productRouter = require('./productController');
-const deliveryRouter = require('./deliveryController');
+const authRouter = require('./controllers/authController');
+const userRouter = require('./controllers/userController');
+const productRouter = require('./controllers/productController');
+const deliveryRouter = require('./controllers/deliveryController');
 
 router.get('/', function(req, res) {
     res.json({
@@ -13,7 +13,6 @@ router.get('/', function(req, res) {
     });
 });
 
-//set default API response
 router.use('/auth', authRouter);
 router.use('/user', userRouter);
 router.use('/product', productRouter);

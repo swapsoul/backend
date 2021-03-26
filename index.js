@@ -49,7 +49,7 @@ app.listen(port, function () {
 });
 
 //Import routes
-const apiRoutes = require("./src/controllers/router");
+const apiRoutes = require("./src/router");
 //Use API routes in the App
 app.use('/api', apiRoutes);
 
