@@ -16,6 +16,7 @@ function assignProductForAdd(productDataFromPayload) {
     product.productSaleTagLine = commonService.isFieldValid(productDataFromPayload.productSaleTagLine) ? productDataFromPayload.productSaleTagLine : commonService.throwError('Invalid Product Sale Tag Line');
     product.productSizes = commonService.isFieldValid(productDataFromPayload.productSizes) ? productDataFromPayload.productSizes : commonService.throwError('Invalid Product Sizes');
     product.productURL = commonService.isFieldValid(productDataFromPayload.productURL) ? productDataFromPayload.productURL : commonService.throwError('Invalid Product URL');
+    product.productAddDate = new Date().toUTCString();
     return product;
 }
 
