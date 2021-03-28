@@ -30,10 +30,10 @@ exports.verifyToken = (req, res, next) => {
         } else {
             res.status(404).json({
                 message: 'User Not Found'
-            })
+            });
         }
     });
-}
+};
 
 exports.verifyTokenForRequestWithoutPayload = (req, res, next) => {
     if (req.headers['swapsoultoken']) {

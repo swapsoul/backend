@@ -1,4 +1,3 @@
-//productModel.js
 const mongoose = require('mongoose');
 //schema
 const userSchema = mongoose.Schema({
@@ -23,10 +22,12 @@ const userSchema = mongoose.Schema({
     },
     verificationOtp: String,
     verificationOtpTimestamp: String,
-    signInMethod: String
+    signInMethod: String,
+    signUpDate: String
 }, { collection: 'users' });
 
 const User = module.exports = mongoose.model('users', userSchema);
 module.exports.get = function (callback, limit) {
     User.find(callback).limit(limit);
-}
+};
+

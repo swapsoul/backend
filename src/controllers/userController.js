@@ -1,4 +1,4 @@
-const userRouter = require('express').Router({ mergeParams: true })
+const userRouter = require('express').Router({ mergeParams: true });
 const userService = require('../services/userService');
 const authWrapper = require('../wrappers/auth-wrapper');
 

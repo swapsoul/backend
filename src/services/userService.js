@@ -1,10 +1,10 @@
-User = require('../models/userModel');
+const User = require('../models/userModel');
 const commonService = require('./commonService');
 const emailService = require('./emailService');
 
 //get all users
 exports.getAllUsers = function (req, res) {
-    User.find({}, { _id: 1, phoneNumber: 1, userEmail: 1, userName: 1 }, function (err, user) {
+    User.find({}, { _id: 1, phoneNumber: 1, userEmail: 1, userName: 1, verificationStatus: 1 }, function (err, user) {
         if (user) {
             res.json({
                 message: "Got user Successfully!",
@@ -13,7 +13,7 @@ exports.getAllUsers = function (req, res) {
         } else {
             res.status(404).json({
                 message: 'User Not Found'
-            })
+            });
         }
     });
 };
@@ -21,7 +21,7 @@ exports.getAllUsers = function (req, res) {
 //For creating new user
 exports.addUser = function (req, res) {
     const token = req.headers['swapsoultoken'];
-    if (token === undefined) {
+    if (!token) {
         return res.status(400).json({
             message: 'Bad Request'
         });
@@ -34,12 +34,13 @@ exports.addUser = function (req, res) {
     const user = new User();
     user.userEmail = commonService.isFieldValid(req.body.userEmail) ? req.body.userEmail : commonService.throwError('Invalid Email');
     user.userName = commonService.isFieldValid(req.body.userName) ? req.body.userName : commonService.throwError('Invalid Username');
-    user.userPassword = resp.hash
+    user.userPassword = resp.hash;
     user.phoneNumber = commonService.isFieldValid(req.body.phoneNumber) ? req.body.phoneNumber : commonService.throwError('Invalid PhoneNumber');
     user.signInMethod = 'email';
     user.verificationOtp = verificationOtp;
     user.verificationOtpTimestamp = verificationOtpTimestamp;
     user.verificationStatus = false;
+    user.signUpDate = verificationOtpTimestamp;
 
     //Save and check error
     user.save(function (err) {
@@ -47,7 +48,7 @@ exports.addUser = function (req, res) {
             if (err.name === 'MongoError' && err.code === 11000) {
                 res.status(409).json({
                     message: 'User already exists'
-                })
+                });
             } else {
                 res.status(501).json({
                     message: 'Something went wrong. Please contact admin of this site.'
@@ -56,8 +57,8 @@ exports.addUser = function (req, res) {
         } else {
             emailService.sendMail(user.userEmail, 'Swapsoul - Verification Pending', 'userVerificationOTP.html', {
                 name: user.userName,
-                verificationOtp: verificationOtp,
-                verificationOtpTimestamp: verificationOtpTimestamp
+                verificationOtp,
+                verificationOtpTimestamp
             }, [], (err) => {
                 if (err) {
                     res.status(204).json({
@@ -92,7 +93,7 @@ exports.getUserByUsernameOrEmail = function (req, res) {
             { userName: req.params.usernameOrEmail },
             { userEmail: req.params.usernameOrEmail }
         ]
-    }, { _id: 1, phoneNumber: 1, userEmail: 1, userName: 1 }, function (err, user) {
+    }, { _id: 1, phoneNumber: 1, userEmail: 1, userName: 1, verificationStatus: 1}, function (err, user) {
         if (err) {
             res.status(404).json({
                 message: 'User Not Found'
@@ -161,7 +162,7 @@ exports.deleteUserByUsernameOrEmail = function (req, res) {
             });
         }
     });
-}
+};
 
 exports.resetPasswordSendMail = (req, res) => {
     if (commonService.isFieldValid(req.params.usernameOrEmail)) {
@@ -188,8 +189,8 @@ exports.resetPasswordSendMail = (req, res) => {
                     } else {
                         emailService.sendMail(user.userEmail, "Swapsoul - Password Reset", 'forgotPassword.html', {
                             name: user.userName,
-                            passwordOtp: passwordOtp,
-                            passwordOtpTimestamp: passwordOtpTimestamp
+                            passwordOtp,
+                            passwordOtpTimestamp
                         }, [], (err) => {
                             if (err) {
                                 res.status(204).json({
@@ -210,7 +211,7 @@ exports.resetPasswordSendMail = (req, res) => {
             message: 'Bad Request'
         });
     }
-}
+};
 
 exports.resetPassword = (req, res) => {
     if (commonService.isFieldValid(req.body.usernameOrEmail) && req.body.passwordOtp) {
@@ -263,7 +264,7 @@ exports.resetPassword = (req, res) => {
             message: 'Bad Request'
         });
     }
-}
+};
 
 exports.userVerificationInitEmail = (req, res) => {
     if (commonService.isFieldValid(req.params.usernameOrEmail)) {
@@ -290,8 +291,8 @@ exports.userVerificationInitEmail = (req, res) => {
                     } else {
                         emailService.sendMail(user.userEmail, 'Swapsoul - Verification Pending', 'userVerificationOTP.html', {
                             name: user.userName,
-                            verificationOtp: verificationOtp,
-                            verificationOtpTimestamp: verificationOtpTimestamp
+                            verificationOtp,
+                            verificationOtpTimestamp
                         }, [], (err) => {
                             if (err) {
                                 res.status(204).json({
@@ -314,7 +315,7 @@ exports.userVerificationInitEmail = (req, res) => {
             message: 'Bad Request'
         });
     }
-}
+};
 
 exports.userVerificationUpdate = (req, res) => {
     if (commonService.isFieldValid(req.body.usernameOrEmail) && req.body.verificationOtp) {
@@ -368,4 +369,4 @@ exports.userVerificationUpdate = (req, res) => {
             message: 'Bad Request'
         });
     }
-}
+};
