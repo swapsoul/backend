@@ -40,6 +40,7 @@ exports.addUser = function (req, res) {
     user.verificationOtp = verificationOtp;
     user.verificationOtpTimestamp = verificationOtpTimestamp;
     user.verificationStatus = false;
+    user.signUpDate = verificationOtpTimestamp;
 
     //Save and check error
     user.save(function (err) {
