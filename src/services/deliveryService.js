@@ -28,7 +28,7 @@ exports.getDeliveryStatus = (req, res) => {
                     data: document
                 });
             } else {
-                res.status(427).json({
+                res.status(219).json({
                     message: 'Delivery is not available'
                 })
             }
