@@ -17,6 +17,8 @@ const productSchema = mongoose.Schema({
     productSaleTagLine: String,
     productSizes: Array,
     productURL: String,
+    productAddDate: String,
+    modifiedDate: String
 }, {collection: 'products'}); // Give specific collection name, otherwise plural name will be used
 // Export Product Model
 const Product = module.exports = mongoose.model('products', productSchema);
