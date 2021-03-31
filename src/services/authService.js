@@ -11,9 +11,9 @@ exports.login = async (req, res) => {
     });
 };
 
-exports.signup = async (req, res) => {
-    console.log('Signup Method');
-    res.json({
-        message: 'Signup works'
-    });
-};
+// exports.signup = async (req, res) => {
+//     console.log('Signup Method');
+//     res.json({
+//         message: 'Signup works'
+//     });
+// };
