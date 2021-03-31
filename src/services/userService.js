@@ -41,6 +41,7 @@ exports.addUser = function (req, res) {
     user.verificationOtpTimestamp = verificationOtpTimestamp;
     user.verificationStatus = false;
     user.signUpDate = verificationOtpTimestamp;
+    user.modifiedDate = verificationOtpTimestamp;
 
     //Save and check error
     user.save(function (err) {
@@ -124,6 +125,7 @@ exports.updateUser = function (req, res) {
             user.userEmail = commonService.isFieldValid(req.body.userEmail) ? req.body.userEmail : user.userEmail;
             user.userName = commonService.isFieldValid(req.body.userName) ? req.body.userName : user.userName;
             user.phoneNumber = commonService.isFieldValid(req.body.phoneNumber) ? req.body.phoneNumber : user.phoneNumber;
+            user.modifiedDate = new Date().toUTCString();
             user.save(function (err) {
                 if (err) {
                     res.status(501).json({
@@ -181,6 +183,7 @@ exports.resetPasswordSendMail = (req, res) => {
                 const passwordOtpTimestamp = new Date().toUTCString();
                 user.passwordOtp = passwordOtp;
                 user.passwordOtpTimestamp = passwordOtpTimestamp;
+                user.modifiedDate = new Date().toUTCString();
                 user.save((err) => {
                     if (err) {
                         res.status(501).json({
@@ -232,6 +235,7 @@ exports.resetPassword = (req, res) => {
                 const after10min = dateFromDb.setMinutes(dateFromDb.getMinutes() + 10);
                 if (user.passwordOtp === req.body.passwordOtp && after10min > currentDate) {
                     user.userPassword = hashResponse.hash;
+                    user.modifiedDate = new Date().toUTCString();
                     user.save((err) => {
                         if (err) {
                             res.status(501).json({
@@ -283,6 +287,7 @@ exports.userVerificationInitEmail = (req, res) => {
                 const verificationOtpTimestamp = new Date().toUTCString();
                 user.verificationOtp = verificationOtp;
                 user.verificationOtpTimestamp = verificationOtpTimestamp;
+                user.modifiedDate = new Date().toUTCString();
                 user.save((err) => {
                     if (err) {
                         res.status(501).json({
@@ -335,6 +340,7 @@ exports.userVerificationUpdate = (req, res) => {
                 const after10min = dateFromDb.setMinutes(dateFromDb.getMinutes() + 10);
                 if (user.verificationOtp === req.body.verificationOtp && after10min > currentDate) {
                     user.verificationStatus = true;
+                    user.modifiedDate = new Date().toUTCString();
                     user.save((err) => {
                         if (err) {
                             res.status(501).json({

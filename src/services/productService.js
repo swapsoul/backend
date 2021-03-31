@@ -17,6 +17,7 @@ function assignProductForAdd(productDataFromPayload) {
     product.productSizes = commonService.isFieldValid(productDataFromPayload.productSizes) ? productDataFromPayload.productSizes : commonService.throwError('Invalid Product Sizes');
     product.productURL = commonService.isFieldValid(productDataFromPayload.productURL) ? productDataFromPayload.productURL : commonService.throwError('Invalid Product URL');
     product.productAddDate = new Date().toUTCString();
+    product.modifiedDate = product.productAddDate;
     return product;
 }
 
@@ -34,6 +35,7 @@ function assignProductForUpdate(product, productDataFromPayload) {
     product.productSaleTagLine = commonService.isFieldValid(productDataFromPayload.productSaleTagLine) ? productDataFromPayload.productSaleTagLine : product.productSaleTagLine;
     product.productSizes = commonService.isFieldValid(productDataFromPayload.productSizes) ? productDataFromPayload.productSizes : product.productSizes;
     product.productURL = commonService.isFieldValid(productDataFromPayload.productURL) ? productDataFromPayload.productURL : product.productURL;
+    product.modifiedDate = new Date().toUTCString();
     return product;
 }
 

@@ -23,7 +23,8 @@ const userSchema = mongoose.Schema({
     verificationOtp: String,
     verificationOtpTimestamp: String,
     signInMethod: String,
-    signUpDate: String
+    signUpDate: String,
+    modifiedDate: String
 }, { collection: 'users' });
 
 const User = module.exports = mongoose.model('users', userSchema);
