@@ -50,9 +50,14 @@ exports.addUser = function (req, res) {
                 res.status(409).json({
                     message: 'User already exists'
                 });
+            } else if (err.name === 'MongoError' && err.code === 121) {
+                res.status(427).json({
+                    message: res.message
+                });
             } else {
                 res.status(501).json({
-                    message: 'Something went wrong. Please contact admin of this site.'
+                    message: 'Something went wrong. Please contact admin of this site.',
+                    detailErrorMsg: err.message
                 });
             }
         } else {
