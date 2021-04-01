@@ -69,7 +69,7 @@ exports.addProduct = (req, res) => {
     });
 };
 exports.getProductByProductId = (req, res) => {
-    Product.find({ productID: req.params.productID }, (err, product) => {
+    Product.find({ productID: req.params.productId }, (err, product) => {
         if (err) {
             res.status(501).json({
                 message: "Error in fetching product"
