@@ -18,7 +18,7 @@ const mailerConfig = {
     port: process.env.SMTPPORT || 465,
     auth: {
         user: process.env.FromEmail || 'info@swapsoul.com',
-        pass: process.env.EmailPassword
+        pass: process.env.EmailPassword || 'swapsoul@123',
     }
 };
 
