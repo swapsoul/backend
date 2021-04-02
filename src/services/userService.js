@@ -28,20 +28,15 @@ exports.addUser = function (req, res) {
     }
     const resp = commonService.decryptToken(token);
 
-    const verificationOtp = commonService.createOtp(6);
-    const verificationOtpTimestamp = new Date().toUTCString();
-
     const user = new User();
     user.userEmail = commonService.isFieldValid(req.body.userEmail) ? req.body.userEmail : commonService.throwError('Invalid Email');
     user.userName = commonService.isFieldValid(req.body.userName) ? req.body.userName : commonService.throwError('Invalid Username');
     user.userPassword = resp.hash;
     user.phoneNumber = commonService.isFieldValid(req.body.phoneNumber) ? req.body.phoneNumber : commonService.throwError('Invalid PhoneNumber');
     user.signInMethod = 'email';
-    user.verificationOtp = verificationOtp;
-    user.verificationOtpTimestamp = verificationOtpTimestamp;
     user.verificationStatus = false;
-    user.signUpDate = verificationOtpTimestamp;
-    user.modifiedDate = verificationOtpTimestamp;
+    user.signUpDate = new Date().toUTCString();
+    user.modifiedDate = user.signUpDate;
 
     //Save and check error
     user.save(function (err) {
@@ -61,10 +56,8 @@ exports.addUser = function (req, res) {
                 });
             }
         } else {
-            emailService.sendMail(user.userEmail, 'Swapsoul - Verification Pending', 'userVerificationOTP.html', {
-                name: user.userName,
-                verificationOtp,
-                verificationOtpTimestamp
+            emailService.sendMail(user.userEmail, 'Swapsoul - Welcome', 'welcomeUser.html', {
+                name: user.userName
             }, [], (err) => {
                 if (err) {
                     res.status(204).json({
