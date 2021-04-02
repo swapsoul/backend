@@ -45,7 +45,7 @@ exports.verifyTokenForRequestWithoutPayload = (req, res, next) => {
                 { userEmail: response.usernameOrEmail }
             ]
         }, (err, user) => {
-            if (err) {
+            if (err || !user) {
                 res.status(404).json({
                     message: 'User Not Found'
                 });
