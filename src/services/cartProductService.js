@@ -1,5 +1,19 @@
 const cartProduct = require("../models/cartProductModel");
 
+function cartPopulator(cart) {
+    let totalQty=0,totalRetailPrice=0,totalSalePrice=0,totalDiscount=0;
+    let cartArray = [];
+    for(let item of cart) {
+        totalQty+=item.productQuantity;
+        totalRetailPrice+=item.productRetailPrice*item.productQuantity;
+        totalSalePrice+=item.productSalePrice*item.productQuantity;
+        totalDiscount+=item.productDiscount*item.productQuantity;
+        delete item.__v;
+        cartArray.push(item);
+    }
+    return {totalQty,totalRetailPrice,totalSalePrice,totalDiscount,cartArray};
+}
+
 exports.addByProductId = (req, res) => {
 	let cProduct = new cartProduct({
 		user: req.user._id,
@@ -33,7 +47,7 @@ exports.addByProductId = (req, res) => {
 exports.getCart = async (req, res) => {
 	try {
 		const cart = await cartProduct.find({ user: req.user._id });
-		res.send(cart);
+		res.send(cartPopulator(cart));
 	} catch (error) {
 		console.log(error);
 		res.status(501).json({
@@ -47,7 +61,7 @@ exports.updateQuantityByProductId = async (req, res) => {
 	try {
 		await cartProduct.findByIdAndUpdate({ _id: req.body._id }, { productQuantity: req.body.productQuantity });
 		const cart = await cartProduct.find({ user: req.user._id });
-		res.send(cart);
+		res.send(cartPopulator(cart));
 	} catch (error) {
 		console.log(error);
 		res.status(501).json({
@@ -61,7 +75,7 @@ exports.deleteByProductId = async (req, res) => {
 	try {
 		await cartProduct.findByIdAndDelete({ _id: req.body._id });
 		const cart = await cartProduct.find({ user: req.user._id });
-		res.send(cart);
+		res.send(cartPopulator(cart));
 	} catch (error) {
 		console.log(error);
 		res.status(501).json({
