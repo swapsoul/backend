@@ -1,20 +1,48 @@
 const cartProduct = require("../models/cartProductModel");
 
 function cartPopulator(cart) {
-    let totalQty=0,totalRetailPrice=0,totalSalePrice=0,totalDiscount=0;
-    let cartArray = [];
-    for(let item of cart) {
-        totalQty+=item.productQuantity;
-        totalRetailPrice+=item.productRetailPrice*item.productQuantity;
-        totalSalePrice+=item.productSalePrice*item.productQuantity;
-        totalDiscount+=item.productDiscount*item.productQuantity;
-        delete item.__v;
-        cartArray.push(item);
-    }
-    return {totalQty,totalRetailPrice,totalSalePrice,totalDiscount,cartArray};
+	let totalQty = 0,
+		totalRetailPrice = 0,
+		totalSalePrice = 0,
+		totalDiscount = 0;
+	let cartArray = [];
+	for (let item of cart) {
+		totalQty += item.productQuantity;
+		totalRetailPrice += item.productRetailPrice * item.productQuantity;
+		totalSalePrice += item.productSalePrice * item.productQuantity;
+		totalDiscount += item.productDiscount * item.productQuantity;
+		delete item.__v;
+		cartArray.push(item);
+	}
+	return { totalQty, totalRetailPrice, totalSalePrice, totalDiscount, cartArray };
 }
 
-exports.addByProductId = (req, res) => {
+exports.addByProductId = async (req, res) => {
+	try {
+		const cart = await cartProduct.find({ user: req.user._id, productId: req.body.productId });
+
+		if (cart.length) {
+			console.log("item present");
+			if (cart[0].productColor != req.body.productColor || cart[0].productSize != req.body.productSize) {
+				console.log("proceed to create");
+			} else {
+				res.status(200).json({
+					message: "Product already in cart",
+				});
+				return;
+			}
+		} else {
+			console.log("proceed to create");
+		}
+		// return;
+	} catch (error) {
+		console.log(err);
+		res.status(501).json({
+			message: "Error in adding product to cart",
+		});
+		return;
+	}
+
 	let cProduct = new cartProduct({
 		user: req.user._id,
 		productId: req.body.productId,
