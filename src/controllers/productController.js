@@ -5,7 +5,7 @@ const productService = require('../services/productService');
 productRouter.route('/')
     .get(productService.getAllProduct)
     .post(productService.addProduct);
-productRouter.route('/:productID')
+productRouter.route('/:productId')
     .get(productService.getProductByProductId)
     .patch(productService.updateProductByProductId)
     .put(productService.updateProductByProductId)

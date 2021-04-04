@@ -3,7 +3,7 @@ const commonService = require('./commonService');
 
 function assignProductForAdd(productDataFromPayload) {
     const product = new Product();
-    product.productID = productDataFromPayload.productID ? productDataFromPayload.productID : product.productID;
+    product.productId = productDataFromPayload.productId ? productDataFromPayload.productId : product.productId;
     product.productName = commonService.isFieldValid(productDataFromPayload.productName) ? productDataFromPayload.productName : commonService.throwError('Invalid Product Name');
     product.productSalePrice = commonService.isFieldValid(productDataFromPayload.productSalePrice) ? productDataFromPayload.productSalePrice : commonService.throwError('Invalid Product Sale Price');
     product.productImgURL = commonService.isFieldValid(productDataFromPayload.productImgURL) ? productDataFromPayload.productImgURL : commonService.throwError('Invalid Product Img URL');
@@ -22,7 +22,7 @@ function assignProductForAdd(productDataFromPayload) {
 }
 
 function assignProductForUpdate(product, productDataFromPayload) {
-    product.productID = productDataFromPayload.productID ? productDataFromPayload.productID : product.productID;
+    product.productId = productDataFromPayload.productId ? productDataFromPayload.productId : product.productId;
     product.productName = commonService.isFieldValid(productDataFromPayload.productName) ? productDataFromPayload.productName : product.productName;
     product.productSalePrice = commonService.isFieldValid(productDataFromPayload.productSalePrice) ? productDataFromPayload.productSalePrice : product.productSalePrice;
     product.productImgURL = commonService.isFieldValid(productDataFromPayload.productImgURL) ? productDataFromPayload.productImgURL : product.productImgURL;
@@ -69,7 +69,7 @@ exports.addProduct = (req, res) => {
     });
 };
 exports.getProductByProductId = (req, res) => {
-    Product.find({ productID: req.params.productID }, (err, product) => {
+    Product.find({ productId: req.params.productId }, (err, product) => {
         if (err) {
             res.status(501).json({
                 message: "Error in fetching product"
@@ -83,7 +83,7 @@ exports.getProductByProductId = (req, res) => {
     });
 };
 exports.updateProductByProductId = (req, res) => {
-    Product.find({ productID: req.params.productID }, (err, product) => {
+    Product.find({ productId: parseInt(req.params.productId) }, (err, product) => {
         if (err) {
             res.status(501).json({
                 message: "Error in fetching product"
@@ -104,7 +104,7 @@ exports.updateProductByProductId = (req, res) => {
     });
 };
 exports.deleteProductByProductId = (req, res) => {
-    Product.deleteOne({ productID: req.params.productID }, (err) => {
+    Product.deleteOne({ productId: req.params.productId }, (err) => {
         if (err) {
             res.status(501).json({
                 message: "Error in deleting product"
@@ -116,4 +116,3 @@ exports.deleteProductByProductId = (req, res) => {
         }
     })
 };
-
