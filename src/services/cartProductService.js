@@ -43,7 +43,7 @@ exports.getCart = async (req, res) => {
 	}
 };
 
-exports.updateQuantity = async (req, res) => {
+exports.updateQuantityByProductId = async (req, res) => {
 	try {
 		await cartProduct.findByIdAndUpdate({ _id: req.body._id }, { productQuantity: req.body.productQuantity });
 		const cart = await cartProduct.find({ user: req.user._id });
@@ -57,4 +57,16 @@ exports.updateQuantity = async (req, res) => {
 	}
 };
 
-
+exports.deleteByProductId = async (req, res) => {
+	try {
+		await cartProduct.findByIdAndDelete({ _id: req.body._id });
+		const cart = await cartProduct.find({ user: req.user._id });
+		res.send(cart);
+	} catch (error) {
+		console.log(error);
+		res.status(501).json({
+			message: "Failed to delete product from cart",
+			data: [],
+		});
+	}
+};
