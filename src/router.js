@@ -5,6 +5,8 @@ const authRouter = require('./controllers/authController');
 const userRouter = require('./controllers/userController');
 const productRouter = require('./controllers/productController');
 const deliveryRouter = require('./controllers/deliveryController');
+const cartProductRouter = require('./controllers/cartProductController');
+
 
 router.get('/', function(req, res) {
     res.json({
@@ -17,6 +19,7 @@ router.use('/auth', authRouter);
 router.use('/user', userRouter);
 router.use('/product', productRouter);
 router.use('/delivery', deliveryRouter);
+router.use('/cart', cartProductRouter);
 
 //Export API routes
 module.exports = router;
