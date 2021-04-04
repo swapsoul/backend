@@ -6,7 +6,7 @@ cartProductRouter
 	.route("/")
 	.post(authWrapper.verifyToken, cartProductService.getCart)
 	.put(authWrapper.verifyToken, cartProductService.addByProductId)
-	.patch(authWrapper.verifyToken, cartProductService.updateQuantity)
-// .delete(authWrapper.verifyToken,cartProductService.deleteByProductId);
+	.patch(authWrapper.verifyToken, cartProductService.updateQuantityByProductId)
+	.delete(authWrapper.verifyToken, cartProductService.deleteByProductId);
 
 module.exports = cartProductRouter;
