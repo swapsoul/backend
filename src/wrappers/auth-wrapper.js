@@ -46,11 +46,13 @@ exports.verifyTokenForRequestWithoutPayload = (req, res, next) => {
                 { userEmail: response.usernameOrEmail }
             ]
         }, (err, user) => {
+            const isValidUser = req.params.usernameOrEmail ? user ?
+                user.userName === req.params.usernameOrEmail || user.userEmail === req.params.usernameOrEmail : false : true;
             if (err || !user) {
                 res.status(404).json({
                     message: 'User Not Found'
                 });
-            } else if (user.userPassword === response.hash) {
+            } else if (user.userPassword === response.hash && isValidUser) {
                 next();
             } else {
                 console.log('Unauthorized ' + user.userName);
