@@ -14,6 +14,7 @@ exports.verifyToken = (req, res, next) => {
                 console.log(response);
                 if ((user.userName === response.usernameOrEmail || user.userEmail === response.usernameOrEmail) && user.userPassword === response.hash) {
                     console.log('Authorized ' + req.body.usernameOrEmail);
+                    req.user = user;
                     next();
                 } else {
                     console.log('Unauthorized ' + req.body.usernameOrEmail);
