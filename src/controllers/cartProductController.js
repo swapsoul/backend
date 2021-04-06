@@ -4,7 +4,7 @@ const authWrapper = require("../wrappers/auth-wrapper");
 
 cartProductRouter
 	.route("/")
-	.post(authWrapper.verifyToken, cartProductService.getCart)
+	.get(authWrapper.verifyTokenForRequestWithoutPayload, cartProductService.getCart)
 	.put(authWrapper.verifyToken, cartProductService.addByProductId)
 	.patch(authWrapper.verifyToken, cartProductService.updateQuantityByProductId)
 	.delete(authWrapper.verifyToken, cartProductService.deleteByProductId);
