@@ -53,6 +53,7 @@ exports.verifyTokenForRequestWithoutPayload = (req, res, next) => {
                     message: 'User Not Found'
                 });
             } else if (user.userPassword === response.hash && isValidUser) {
+                req.user = user;
                 next();
             } else {
                 console.log('Unauthorized ' + user.userName);
