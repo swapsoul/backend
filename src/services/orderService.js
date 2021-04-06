@@ -17,7 +17,7 @@ exports.createOrder = async (req, res) => {
 		console.log(order);
 
 		let writeOrder = await order.save();
-        await Cart.deleteMany({user: req.user._id});
+		await Cart.deleteMany({ user: req.user._id });
 		res.status(201).json({
 			message: "Order placed",
 			data: writeOrder,
@@ -33,7 +33,7 @@ exports.createOrder = async (req, res) => {
 exports.modifyOrderStatus = async (req, res) => {
 	try {
 		await Order.findByIdAndUpdate({ _id: req.body._id }, { orderStatus: req.body.orderStatus });
-		let orderStatus =await Order.find({ _id: req.body._id });
+		let orderStatus = await Order.find({ _id: req.body._id });
 		res.send(orderStatus);
 	} catch (error) {
 		console.log(error);
@@ -43,27 +43,38 @@ exports.modifyOrderStatus = async (req, res) => {
 	}
 };
 
-exports.getOrdersByUserId = async (req, res)=>{
-    try {
-        let orders = await Order.find({user: req.user._id});
-        res.send(orders);
-    } catch (error) {
-        console.log(error);
+exports.getOrdersByUserId = async (req, res) => {
+	try {
+		let orders = await Order.find({ user: req.user._id });
+		let modifiedOrder = [];
+		for (let order of orders) {
+			let clone = JSON.parse(JSON.stringify(order))
+			clone['orderId']= order._id;
+			modifiedOrder.push(clone)
+		}
+		res.send(modifiedOrder);
+	} catch (error) {
+		console.log(error);
 		res.status(501).json({
 			message: "Failed to fetch orders",
 		});
-    }
-}
+	}
+};
 
-exports.getAllOrders = async (req, res)=>{
-    try {
-        let orders = await Order.find({}).sort({userEmail:1}).populate("user");
-        // orders.
-        res.send(orders);
-    } catch (error) {
-        console.log(error);
+exports.getAllOrders = async (req, res) => {
+	try {
+		let orders = await Order.find({}).sort({ userEmail: 1 }).populate("user");
+		let modifiedOrder = [];
+		for (let order of orders) {
+			let clone = JSON.parse(JSON.stringify(order))
+			clone['orderId']= order._id;
+			modifiedOrder.push(clone)
+		}
+		res.send(modifiedOrder);
+	} catch (error) {
+		console.log(error);
 		res.status(501).json({
 			message: "Failed to fetch all the orders",
 		});
-    }
-}
+	}
+};
