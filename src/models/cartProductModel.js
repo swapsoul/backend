@@ -28,6 +28,12 @@ const cartProductSchema = mongoose.Schema(
 		productQuantity: {
 			type: Number,
 			required: true,
+			validate: {
+				validator: function(num) {
+				  return num > 0;
+				},
+				message: "Invalid quantity"
+			  }
 		},
 	},
 	{ collection: "cartProducts" }

@@ -40,7 +40,7 @@ exports.addByProductId = async (req, res) => {
 		}
 		// return;
 	} catch (error) {
-		console.log(err);
+		console.log("-------" + error + "--------");
 		res.status(501).json({
 			message: "Error in adding product to cart",
 		});
@@ -50,7 +50,7 @@ exports.addByProductId = async (req, res) => {
 	let cProduct = new cartProduct({
 		user: req.user._id,
 		productId: req.body.productId,
-		product: req.body.product,		
+		product: req.body.product,
 		productColor: req.body.productColor,
 		productSize: req.body.productSize,
 		productQuantity: req.body.productQuantity,
@@ -58,10 +58,14 @@ exports.addByProductId = async (req, res) => {
 
 	cProduct.save((err) => {
 		if (err) {
-			console.log(err);
-			res.status(501).json({
-				message: "Error in adding product to cart",
-			});
+			if (err.toString().toLowerCase().includes("invalid"))
+				res.status(501).json({
+					message: "Quantity needs to be positive",
+				});
+			else
+				res.status(501).json({
+					message: "Error in adding product to cart",
+				});
 		} else {
 			res.status(201).json({
 				message: "Product Added to cart!",
@@ -73,7 +77,7 @@ exports.addByProductId = async (req, res) => {
 
 exports.getCart = async (req, res) => {
 	try {
-		const cart = await cartProduct.find({ user: req.user._id }).populate('product');
+		const cart = await cartProduct.find({ user: req.user._id }).populate("product");
 		res.send(cartPopulator(cart));
 	} catch (error) {
 		console.log(error);
@@ -87,14 +91,19 @@ exports.getCart = async (req, res) => {
 exports.updateQuantityByProductId = async (req, res) => {
 	try {
 		await cartProduct.findByIdAndUpdate({ _id: req.body._id }, { productQuantity: req.body.productQuantity });
-		const cart = await cartProduct.find({ user: req.user._id }).populate('product');
+		const cart = await cartProduct.find({ user: req.user._id }).populate("product");
 		res.send(cartPopulator(cart));
 	} catch (error) {
 		console.log(error);
-		res.status(501).json({
-			message: "Failed to update quantity",
-			data: [],
-		});
+		if (error.toString().toLowerCase().includes("invalid"))
+			res.status(501).json({
+				message: "Quantity needs to be positive",
+			});
+		else
+			res.status(501).json({
+				message: "Failed to update quantity",
+				data: [],
+			});
 	}
 };
 
