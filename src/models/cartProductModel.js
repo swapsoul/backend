@@ -11,35 +11,17 @@ const cartProductSchema = mongoose.Schema(
 			type: String,
 			required: true,
 		},
-		productName: {
-			type: String,
+		product: {
+			type: mongoose.Schema.Types.ObjectId,
 			required: true,
+			ref: "products",
 		},
-		productImgURL: {
-			type: String,
-			required: true,
-		},
-		productColor: {
-			type: String,
-			required: true,
-		},
-		productDiscount: {
-			type: Number,
-			required: true,
-		},
-		productRetailPrice: {
-			type: Number,
-			required: true,
-		},
-		productSalePrice: {
-			type: Number,
-			required: true,
-		},
+
 		productSize: {
 			type: String,
 			required: true,
 		},
-		productURL: {
+		productColor: {
 			type: String,
 			required: true,
 		},

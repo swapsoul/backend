@@ -8,10 +8,14 @@ function cartPopulator(cart) {
 	let cartArray = [];
 	for (let item of cart) {
 		totalQty += item.productQuantity;
-		totalRetailPrice += item.productRetailPrice * item.productQuantity;
-		totalSalePrice += item.productSalePrice * item.productQuantity;
-		totalDiscount += item.productDiscount * item.productQuantity;
-		delete item.__v;
+		totalRetailPrice += item.product.productRetailPrice * item.productQuantity;
+		totalSalePrice += item.product.productSalePrice * item.productQuantity;
+		totalDiscount += item.product.productDiscount * item.productQuantity;
+		try {
+			delete item.__v;
+		} catch (error) {
+			console.log(error);
+		}
 		cartArray.push(item);
 	}
 	return { totalQty, totalRetailPrice, totalSalePrice, totalDiscount, cartArray };
@@ -46,14 +50,9 @@ exports.addByProductId = async (req, res) => {
 	let cProduct = new cartProduct({
 		user: req.user._id,
 		productId: req.body.productId,
-		productName: req.body.productName,
-		productImgURL: req.body.productImgURL,
+		product: req.body.product,		
 		productColor: req.body.productColor,
-		productDiscount: req.body.productDiscount,
-		productRetailPrice: req.body.productRetailPrice,
-		productSalePrice: req.body.productSalePrice,
 		productSize: req.body.productSize,
-		productURL: req.body.productURL,
 		productQuantity: req.body.productQuantity,
 	});
 
@@ -74,7 +73,7 @@ exports.addByProductId = async (req, res) => {
 
 exports.getCart = async (req, res) => {
 	try {
-		const cart = await cartProduct.find({ user: req.user._id });
+		const cart = await cartProduct.find({ user: req.user._id }).populate('product');
 		res.send(cartPopulator(cart));
 	} catch (error) {
 		console.log(error);
@@ -88,7 +87,7 @@ exports.getCart = async (req, res) => {
 exports.updateQuantityByProductId = async (req, res) => {
 	try {
 		await cartProduct.findByIdAndUpdate({ _id: req.body._id }, { productQuantity: req.body.productQuantity });
-		const cart = await cartProduct.find({ user: req.user._id });
+		const cart = await cartProduct.find({ user: req.user._id }).populate('product');
 		res.send(cartPopulator(cart));
 	} catch (error) {
 		console.log(error);
