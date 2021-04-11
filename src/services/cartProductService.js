@@ -95,8 +95,10 @@ exports.updateQuantityByProductId = async (req, res) => {
             user: req.user._id
         }, { productQuantity: req.body.productQuantity }, { new: true }, async (err, document) => {
             if (document) {
-                const cart = await cartProduct.find({ user: req.user._id }).populate('product');
-                res.send(cartPopulator(cart));
+                // const cart = await cartProduct.find({ user: req.user._id }).populate('product');
+                res.send({
+                    message: 'Quantity updated.'
+                });
             } else {
                 res.status(404).json({
                     message: 'Cart item not found.',
