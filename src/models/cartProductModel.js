@@ -11,11 +11,13 @@ const cartProductSchema = mongoose.Schema(
 			type: String,
 			required: true,
 		},
-		productName: {
-			type: String,
+		product: {
+			type: mongoose.Schema.Types.ObjectId,
 			required: true,
+			ref: "products",
 		},
-		productImgURL: {
+
+		productSize: {
 			type: String,
 			required: true,
 		},
@@ -23,29 +25,15 @@ const cartProductSchema = mongoose.Schema(
 			type: String,
 			required: true,
 		},
-		productDiscount: {
-			type: Number,
-			required: true,
-		},
-		productRetailPrice: {
-			type: Number,
-			required: true,
-		},
-		productSalePrice: {
-			type: Number,
-			required: true,
-		},
-		productSize: {
-			type: String,
-			required: true,
-		},
-		productURL: {
-			type: String,
-			required: true,
-		},
 		productQuantity: {
 			type: Number,
 			required: true,
+			validate: {
+				validator: function(num) {
+				  return num > 0;
+				},
+				message: "Invalid quantity"
+			  }
 		},
 	},
 	{ collection: "cartProducts" }
