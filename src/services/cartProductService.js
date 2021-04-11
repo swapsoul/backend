@@ -93,8 +93,8 @@ exports.updateQuantityByProductId = async (req, res) => {
         await cartProduct.findByIdAndUpdate({
             _id: req.body._id,
             user: req.user._id
-        }, { productQuantity: req.body.productQuantity }, { new: true }, async (err, document) => {
-            if (document) {
+        }, { productQuantity: req.body.productQuantity }, { new: true }, (err, doc) => {
+            if (doc) {
                 // const cart = await cartProduct.find({ user: req.user._id }).populate('product');
                 res.send({
                     message: 'Quantity updated.'
@@ -121,9 +121,16 @@ exports.updateQuantityByProductId = async (req, res) => {
 
 exports.deleteByProductId = async (req, res) => {
     try {
-        await cartProduct.findByIdAndDelete({ _id: req.body._id });
-        const cart = await cartProduct.find({ user: req.user._id });
-        res.send(cartPopulator(cart));
+        const doc = await cartProduct.findOneAndDelete({ _id: req.body._id, user: req.user._id });
+        if (doc) {
+            res.send({
+                message: 'Product deleted.'
+            });
+        } else {
+            res.status(404).json({
+                message: 'Product not found.',
+            });
+        }
     } catch (error) {
         console.log(error);
         res.status(501).json({
