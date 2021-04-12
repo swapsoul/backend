@@ -1,4 +1,5 @@
 const nodemailer = require('nodemailer');
+const smtpTransport = require('nodemailer-smtp-transport');
 const handlebars = require('handlebars');
 const fs = require('fs');
 const path = require('path');
@@ -22,7 +23,7 @@ const mailerConfig = {
     }
 };
 
-const mailTransport = nodemailer.createTransport(mailerConfig);
+const mailTransport = nodemailer.createTransport(smtpTransport(mailerConfig));
 const templateStaticPath = '../static/templates/';
 const staticPath = '../static/';
 
