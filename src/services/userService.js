@@ -234,6 +234,7 @@ exports.resetPassword = (req, res) => {
                 if (user.passwordOtp === req.body.passwordOtp && after10min > currentDate) {
                     user.userPassword = hashResponse.hash;
                     user.modifiedDate = new Date().toUTCString();
+                    user.passwordOtpTimestamp = dateFromDb.setMinutes(dateFromDb.getMinutes() - 10);
                     user.save((err) => {
                         if (err) {
                             res.status(501).json({
@@ -339,6 +340,7 @@ exports.userVerificationUpdate = (req, res) => {
                 if (user.verificationOtp === req.body.verificationOtp && after10min > currentDate) {
                     user.verificationStatus = true;
                     user.modifiedDate = new Date().toUTCString();
+                    user.verificationOtpTimestamp = dateFromDb.setMinutes(dateFromDb.getMinutes() - 10);
                     user.save((err) => {
                         if (err) {
                             res.status(501).json({
