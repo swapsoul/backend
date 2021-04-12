@@ -20,6 +20,10 @@ const userSchema = mongoose.Schema({
         type: Boolean,
         required: true
     },
+    userAddress: {
+        type: Array,
+        required: true
+    },
     verificationOtp: String,
     verificationOtpTimestamp: String,
     signInMethod: String,
