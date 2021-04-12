@@ -15,7 +15,8 @@ function readTemplateWithReplacements(templateNameWithRelativePath, replacements
 
 const mailerConfig = {
     host: process.env.SMTPHOST || 'smtpout.secureserver.net',
-    secureConnection: true,
+    secure: true,
+    pool: true,
     port: process.env.SMTPPORT || 465,
     auth: {
         user: process.env.FromEmail || 'info@swapsoul.com',
