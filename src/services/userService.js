@@ -4,7 +4,7 @@ const emailService = require('./emailService');
 
 //get all users
 exports.getAllUsers = function (req, res) {
-    User.find({}, { _id: 1, phoneNumber: 1, userEmail: 1, userName: 1, verificationStatus: 1 }, function (err, user) {
+    User.find({}, { _id: 1, phoneNumber: 1, userEmail: 1, userName: 1, verificationStatus: 1, userAddress: 1 }, function (err, user) {
         if (user) {
             res.json({
                 message: "Got user Successfully!",
@@ -33,6 +33,7 @@ exports.addUser = function (req, res) {
     user.userName = commonService.isFieldValid(req.body.userName) ? req.body.userName : commonService.throwError('Invalid Username');
     user.userPassword = resp.hash;
     user.phoneNumber = commonService.isFieldValid(req.body.phoneNumber) ? req.body.phoneNumber : commonService.throwError('Invalid PhoneNumber');
+    user.userAddress = commonService.isFieldValid(req.body.userAddress) ? req.body.userAddress : commonService.throwError('Invalid Address');
     user.signInMethod = 'email';
     user.verificationStatus = false;
     user.signUpDate = new Date().toUTCString();
@@ -66,7 +67,8 @@ exports.addUser = function (req, res) {
                             _id: user._id,
                             userName: user.userName,
                             userEmail: user.userEmail,
-                            phoneNumber: user.phoneNumber
+                            phoneNumber: user.phoneNumber,
+                            userAddress: user.userAddress
                         }
                     });
                 } else {
@@ -76,7 +78,8 @@ exports.addUser = function (req, res) {
                             _id: user._id,
                             userName: user.userName,
                             userEmail: user.userEmail,
-                            phoneNumber: user.phoneNumber
+                            phoneNumber: user.phoneNumber,
+                            userAddress: user.userAddress
                         }
                     });
                 }
@@ -92,12 +95,13 @@ exports.getUserByUsernameOrEmail = function (req, res) {
             { userName: req.params.usernameOrEmail },
             { userEmail: req.params.usernameOrEmail }
         ]
-    }, { _id: 1, phoneNumber: 1, userEmail: 1, userName: 1, verificationStatus: 1}, function (err, user) {
+    }, { _id: 1, phoneNumber: 1, userEmail: 1, userName: 1, verificationStatus: 1, userAddress: 1}, function (err, user) {
         if (err) {
             res.status(404).json({
                 message: 'User Not Found'
             });
         } else if (user) {
+            console.log(user);
             res.json({
                 message: 'User Details',
                 data: user.toJSON()
@@ -117,12 +121,14 @@ exports.updateUser = function (req, res) {
             { userName: req.body.usernameOrEmail },
             { userEmail: req.body.usernameOrEmail }
         ]
-    }, { _id: 1, phoneNumber: 1, userEmail: 1, userName: 1 }, function (err, user) {
+    }, { _id: 1, phoneNumber: 1, userEmail: 1, userName: 1, userAddress: 1 }, function (err, user) {
         if (user) {
-            console.log(user);
+            //console.log(user.userAddress);
             user.userEmail = commonService.isFieldValid(req.body.userEmail) ? req.body.userEmail : user.userEmail;
             user.userName = commonService.isFieldValid(req.body.userName) ? req.body.userName : user.userName;
             user.phoneNumber = commonService.isFieldValid(req.body.phoneNumber) ? req.body.phoneNumber : user.phoneNumber;
+            user.userAddress= commonService.isFieldValid(req.body.userAddress) ? req.body.userAddress : user.userAddress;
+            //console.log(user.userAddress)
             user.modifiedDate = new Date().toUTCString();
             user.save(function (err) {
                 if (err) {
@@ -130,6 +136,7 @@ exports.updateUser = function (req, res) {
                         message: 'Unable to update user details'
                     });
                 } else {
+                    console.log(user);
                     res.json({
                         message: "User Updated Successfully",
                         data: user
@@ -234,6 +241,7 @@ exports.resetPassword = (req, res) => {
                 if (user.passwordOtp === req.body.passwordOtp && after10min > currentDate) {
                     user.userPassword = hashResponse.hash;
                     user.modifiedDate = new Date().toUTCString();
+                    user.passwordOtpTimestamp = dateFromDb.setMinutes(dateFromDb.getMinutes() - 10);
                     user.save((err) => {
                         if (err) {
                             res.status(501).json({
@@ -339,6 +347,7 @@ exports.userVerificationUpdate = (req, res) => {
                 if (user.verificationOtp === req.body.verificationOtp && after10min > currentDate) {
                     user.verificationStatus = true;
                     user.modifiedDate = new Date().toUTCString();
+                    user.verificationOtpTimestamp = dateFromDb.setMinutes(dateFromDb.getMinutes() - 10);
                     user.save((err) => {
                         if (err) {
                             res.status(501).json({

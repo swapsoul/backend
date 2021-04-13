@@ -1,4 +1,5 @@
 const nodemailer = require('nodemailer');
+const smtpTransport = require('nodemailer-smtp-transport');
 const handlebars = require('handlebars');
 const fs = require('fs');
 const path = require('path');
@@ -14,15 +15,16 @@ function readTemplateWithReplacements(templateNameWithRelativePath, replacements
 
 const mailerConfig = {
     host: process.env.SMTPHOST || 'smtpout.secureserver.net',
-    secureConnection: true,
+    secure: true,
+    pool: true,
     port: process.env.SMTPPORT || 465,
     auth: {
         user: process.env.FromEmail || 'info@swapsoul.com',
-        pass: process.env.EmailPassword || 'swapsoul@123',
+        pass: process.env.EmailPassword,
     }
 };
 
-const mailTransport = nodemailer.createTransport(mailerConfig);
+const mailTransport = nodemailer.createTransport(smtpTransport(mailerConfig));
 const templateStaticPath = '../static/templates/';
 const staticPath = '../static/';
 
