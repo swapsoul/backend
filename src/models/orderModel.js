@@ -32,15 +32,29 @@ const orderSchema = mongoose.Schema(
 			type: String,
 			required: true,
 		},
-		cart: {
-			type: Object,
-			required: true,
-		},
+		cart: [
+			{
+				productId: String,
+				user: {
+					type: mongoose.Schema.Types.ObjectId,
+					required: true,
+					ref: "users",
+				},
+				product: {
+					type: mongoose.Schema.Types.ObjectId,
+					required: true,
+					ref: "products",
+				},
+				productColor: String,
+				productSize: String,
+				productQuantity: Number,
+			},
+		],
 	},
 	{ collection: "orders" }
 );
 
-const Order = module.exports = mongoose.model("orders", orderSchema);
+const Order = (module.exports = mongoose.model("orders", orderSchema));
 module.exports.get = function (callback, limit) {
 	Order.find(callback).limit(limit);
 };

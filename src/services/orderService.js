@@ -1,6 +1,32 @@
 const Order = require("../models/orderModel");
 const Cart = require("../models/cartProductModel");
 
+function orderPopulator(order) {
+	let totalQty = 0,
+		totalRetailPrice = 0,
+		totalSalePrice = 0,
+		totalDiscount = 0;
+	let orderArray = [];
+	for (let item of order.cart) {
+		totalQty += item.productQuantity;
+		totalRetailPrice += item.product.productRetailPrice * item.productQuantity;
+		totalSalePrice += item.product.productSalePrice * item.productQuantity;
+		totalDiscount += item.product.productDiscount * item.productQuantity;
+		try {
+			delete item.__v;
+		} catch (error) {
+			console.log(error);
+		}
+		orderArray.push(item);
+	}
+
+	order.totalQty = totalQty;
+	order.totalRetailPrice = totalRetailPrice;
+	order.totalSalePrice = totalSalePrice;
+	order.totalDiscount = totalDiscount;
+	return order;
+}
+
 exports.createOrder = async (req, res) => {
 	try {
 		let order = new Order({
@@ -45,13 +71,22 @@ exports.modifyOrderStatus = async (req, res) => {
 
 exports.getOrdersByUserId = async (req, res) => {
 	try {
-		let orders = await Order.find({ user: req.user._id });
+		let orders = await Order.find({ user: req.user._id }).populate({
+			path: "cart",
+			populate: { path: "product" },
+		});
 		let modifiedOrder = [];
 		for (let order of orders) {
-			let clone = JSON.parse(JSON.stringify(order))
-			clone['orderId']= order._id;
-			modifiedOrder.push(clone)
+			let clone = JSON.parse(JSON.stringify(order));
+			clone["orderId"] = order._id;
+			modifiedOrder.push(clone);
 		}
+		try {
+			orderPopulator(modifiedOrder[0]);
+		} catch (error) {
+			console.log(error);
+		}
+		console.log(modifiedOrder);
 		res.send(modifiedOrder);
 	} catch (error) {
 		console.log(error);
@@ -63,12 +98,22 @@ exports.getOrdersByUserId = async (req, res) => {
 
 exports.getAllOrders = async (req, res) => {
 	try {
-		let orders = await Order.find({}).sort({ userEmail: 1 }).populate("user");
+		let orders = await Order.find({})
+			.sort({ userEmail: 1 })
+			.populate({
+				path: "cart",
+				populate: { path: "product" },
+			});
 		let modifiedOrder = [];
 		for (let order of orders) {
-			let clone = JSON.parse(JSON.stringify(order))
-			clone['orderId']= order._id;
-			modifiedOrder.push(clone)
+			let clone = JSON.parse(JSON.stringify(order));
+			clone["orderId"] = order._id;
+			modifiedOrder.push(clone);
+		}
+		try {
+			orderPopulator(modifiedOrder[0]);
+		} catch (error) {
+			console.log(error);
 		}
 		res.send(modifiedOrder);
 	} catch (error) {
