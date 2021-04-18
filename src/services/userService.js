@@ -4,10 +4,17 @@ const emailService = require('./emailService');
 
 //get all users
 exports.getAllUsers = function (req, res) {
-    User.find({}, { _id: 1, phoneNumber: 1, userEmail: 1, userName: 1, verificationStatus: 1, userAddress: 1 }, function (err, user) {
+    User.find({}, {
+        _id: 1,
+        phoneNumber: 1,
+        userEmail: 1,
+        userName: 1,
+        verificationStatus: 1,
+        userAddress: 1
+    }, function (err, user) {
         if (user) {
             res.json({
-                message: "Got user Successfully!",
+                message: 'Got user Successfully!',
                 data: user
             });
         } else {
@@ -62,7 +69,7 @@ exports.addUser = function (req, res) {
             }, [], (err) => {
                 if (err) {
                     res.status(204).json({
-                        message: "User created and email sending failed",
+                        message: 'User created and email sending failed',
                         data: {
                             _id: user._id,
                             userName: user.userName,
@@ -73,7 +80,7 @@ exports.addUser = function (req, res) {
                     });
                 } else {
                     res.json({
-                        message: "User created and email sent",
+                        message: 'User created and email sent',
                         data: {
                             _id: user._id,
                             userName: user.userName,
@@ -95,7 +102,14 @@ exports.getUserByUsernameOrEmail = function (req, res) {
             { userName: req.params.usernameOrEmail },
             { userEmail: req.params.usernameOrEmail }
         ]
-    }, { _id: 1, phoneNumber: 1, userEmail: 1, userName: 1, verificationStatus: 1, userAddress: 1}, function (err, user) {
+    }, {
+        _id: 1,
+        phoneNumber: 1,
+        userEmail: 1,
+        userName: 1,
+        verificationStatus: 1,
+        userAddress: 1
+    }, function (err, user) {
         if (err) {
             res.status(404).json({
                 message: 'User Not Found'
@@ -127,7 +141,21 @@ exports.updateUser = function (req, res) {
             user.userEmail = commonService.isFieldValid(req.body.userEmail) ? req.body.userEmail : user.userEmail;
             user.userName = commonService.isFieldValid(req.body.userName) ? req.body.userName : user.userName;
             user.phoneNumber = commonService.isFieldValid(req.body.phoneNumber) ? req.body.phoneNumber : user.phoneNumber;
-            user.userAddress= commonService.isFieldValid(req.body.userAddress) ? req.body.userAddress : user.userAddress;
+            // user.userAddress= commonService.isFieldValid(req.body.userAddress) ? req.body.userAddress : user.userAddress;
+            const existingAddresses = user.userAddress.toObject();
+            const address = req.body.userAddress;
+            if (address) {
+                if (address.id >= 0 && address.id < existingAddresses.length) {
+                    const index = address.id;
+                    delete address.id;
+                    existingAddresses[index] = address;
+                    user.userAddress = existingAddresses;
+                } else if (!address.id) {
+                    existingAddresses.push(address);
+                    user.userAddress = existingAddresses;
+                }
+            }
+
             //console.log(user.userAddress)
             user.modifiedDate = new Date().toUTCString();
             user.save(function (err) {
@@ -138,7 +166,7 @@ exports.updateUser = function (req, res) {
                 } else {
                     console.log(user);
                     res.json({
-                        message: "User Updated Successfully",
+                        message: 'User Updated Successfully',
                         data: user
                     });
                 }
@@ -195,7 +223,7 @@ exports.resetPasswordSendMail = (req, res) => {
                             message: 'Unable to update user details'
                         });
                     } else {
-                        emailService.sendMail(user.userEmail, "Swapsoul - Password Reset", 'forgotPassword.html', {
+                        emailService.sendMail(user.userEmail, 'Swapsoul - Password Reset', 'forgotPassword.html', {
                             name: user.userName,
                             passwordOtp,
                             passwordOtpTimestamp
@@ -206,7 +234,7 @@ exports.resetPasswordSendMail = (req, res) => {
                                 });
                             } else {
                                 res.json({
-                                    message: "Password OTP email sent successfully"
+                                    message: 'Password OTP email sent successfully'
                                 });
                             }
                         });
@@ -248,7 +276,7 @@ exports.resetPassword = (req, res) => {
                                 message: 'Unable to update user details'
                             });
                         } else {
-                            emailService.sendMail(user.userEmail, "Swapsoul - Password Update", 'passwordUpdate.html', {
+                            emailService.sendMail(user.userEmail, 'Swapsoul - Password Update', 'passwordUpdate.html', {
                                 name: user.userName,
                                 passwordOtpTimestamp: new Date().toUTCString()
                             }, [], (err) => {
@@ -256,7 +284,7 @@ exports.resetPassword = (req, res) => {
                                     res.status(204).json();
                                 } else {
                                     res.json({
-                                        message: "Password update sent successfully"
+                                        message: 'Password update sent successfully'
                                     });
                                 }
                             });
@@ -264,7 +292,7 @@ exports.resetPassword = (req, res) => {
                     });
                 } else {
                     res.status(401).json({
-                        message: "Incorrect Password OTP"
+                        message: 'Incorrect Password OTP'
                     });
                 }
             }
@@ -307,12 +335,12 @@ exports.userVerificationInitEmail = (req, res) => {
                         }, [], (err) => {
                             if (err) {
                                 res.status(204).json({
-                                    message: "Verification email sending failed",
+                                    message: 'Verification email sending failed',
                                     data: user
                                 });
                             } else {
                                 res.json({
-                                    message: "Verification email sent",
+                                    message: 'Verification email sent',
                                     data: user
                                 });
                             }
@@ -335,7 +363,7 @@ exports.userVerificationUpdate = (req, res) => {
                 { userName: req.body.usernameOrEmail },
                 { userEmail: req.body.usernameOrEmail }
             ]
-        }, { _id: 1, userName: 1, userEmail: 1, verificationOtp: 1, verificationOtpTimestamp: 1}, (err, user) => {
+        }, { _id: 1, userName: 1, userEmail: 1, verificationOtp: 1, verificationOtpTimestamp: 1 }, (err, user) => {
             if (err) {
                 res.status(404).json({
                     message: 'User Not Found'
@@ -354,7 +382,7 @@ exports.userVerificationUpdate = (req, res) => {
                                 message: 'Unable to update user details'
                             });
                         } else {
-                            emailService.sendMail(user.userEmail, "Swapsoul - Account Verified", 'userVerificationUpdate.html', {
+                            emailService.sendMail(user.userEmail, 'Swapsoul - Account Verified', 'userVerificationUpdate.html', {
                                 name: user.userName,
                                 verificationOtpTimestamp: new Date().toUTCString()
                             }, [], (err) => {
@@ -364,7 +392,7 @@ exports.userVerificationUpdate = (req, res) => {
                                     });
                                 } else {
                                     res.json({
-                                        message: "Account verified and email sent successfully"
+                                        message: 'Account verified and email sent successfully'
                                     });
                                 }
                             });
@@ -372,7 +400,7 @@ exports.userVerificationUpdate = (req, res) => {
                     });
                 } else {
                     res.status(401).json({
-                        message: "Incorrect Verification OTP"
+                        message: 'Incorrect Verification OTP'
                     });
                 }
             }
