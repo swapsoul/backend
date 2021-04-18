@@ -146,9 +146,13 @@ exports.updateUser = function (req, res) {
             const address = req.body.userAddress;
             if (address) {
                 if (address.id >= 0 && address.id < existingAddresses.length) {
-                    const index = address.id;
-                    delete address.id;
-                    existingAddresses[index] = address;
+                    if (address.pincode) {
+                        const index = address.id;
+                        delete address.id;
+                        existingAddresses[index] = address;
+                    } else {
+                        existingAddresses.splice(address.id, 1);
+                    }
                     user.userAddress = existingAddresses;
                 } else if (!address.id) {
                     existingAddresses.push(address);
