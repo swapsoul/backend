@@ -56,6 +56,34 @@ exports.createOrder = async (req, res) => {
 	}
 };
 
+exports.createInstantOrder = async (req, res) => {
+	try {
+		let order = new Order({
+			user: req.user._id,
+			userEmail: req.user.userEmail,
+			phoneNumber: req.user.phoneNumber,
+			userName: req.body.userName,
+			address: req.body.address,
+			pincode: req.body.pincode,
+			paymentId: req.body.paymentId,
+			orderStatus: "Order in Process",
+			cart: req.body.cart,
+		});
+		console.log(order);
+
+		let writeOrder = await order.save();
+		res.status(201).json({
+			message: "Order placed",
+			data: writeOrder,
+		});
+	} catch (error) {
+		console.log(error);
+		res.status(501).json({
+			message: "Failed to place order, please contact us for refund",
+		});
+	}
+};
+
 exports.modifyOrderStatus = async (req, res) => {
 	try {
 		await Order.findByIdAndUpdate({ _id: req.body._id }, { orderStatus: req.body.orderStatus });
