@@ -13,7 +13,7 @@ exports.login = async (req, res) => {
             { userName: req.body.usernameOrEmail },
             { userEmail: req.body.usernameOrEmail }
         ]
-    }, {phoneNumber: 1, userEmail: 1, userName: 1, verificationStatus: 1}, function (err, user) {
+    }, {phoneNumber: 1, userEmail: 1, userName: 1, verificationStatus: 1, userAddress: 1}, function (err, user) {
         if (err) {
             res.status(404).json({
                 message: 'User Not Found'
