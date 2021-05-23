@@ -7,6 +7,7 @@ const productRouter = require('./controllers/productController');
 const deliveryRouter = require('./controllers/deliveryController');
 const cartProductRouter = require('./controllers/cartProductController');
 const orderRouter = require('./controllers/orderController');
+const paymentRouter = require('./controllers/paymentController');
 
 router.get('/', function(req, res) {
     res.json({
@@ -20,7 +21,8 @@ router.use('/user', userRouter);
 router.use('/product', productRouter);
 router.use('/delivery', deliveryRouter);
 router.use('/cart', cartProductRouter);
-router.use('/order',orderRouter);
+router.use('/order', orderRouter);
+router.use('/payment', paymentRouter);
 
 //Export API routes
 module.exports = router;
