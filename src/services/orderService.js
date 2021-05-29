@@ -99,23 +99,9 @@ exports.modifyOrderStatus = async (req, res) => {
 
 exports.getOrdersByUserId = async (req, res) => {
 	try {
-		let orders = await Order.find({ user: req.user._id }).populate({
-			path: "cart",
-			populate: { path: "product" },
+		await Order.find({  }, (err, docs) => {
+			res.json(docs);
 		});
-		let modifiedOrder = [];
-		for (let order of orders) {
-			let clone = JSON.parse(JSON.stringify(order));
-			clone["orderId"] = order._id;
-			modifiedOrder.push(clone);
-		}
-		try {
-			orderPopulator(modifiedOrder[0]);
-		} catch (error) {
-			console.log(error);
-		}
-		console.log(modifiedOrder);
-		res.send(modifiedOrder);
 	} catch (error) {
 		console.log(error);
 		res.status(501).json({

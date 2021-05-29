@@ -4,7 +4,7 @@ const authWrapper = require("../wrappers/auth-wrapper");
 
 orderRouter
 	.route("/")
-	.post(authWrapper.verifyToken, orderService.getOrdersByUserId)
+	.get(authWrapper.verifyTokenForRequestWithoutPayload, orderService.getOrdersByUserId)
 	.put(authWrapper.verifyToken, orderService.createOrder)
 	.patch(authWrapper.verifyToken, orderService.modifyOrderStatus);
 
