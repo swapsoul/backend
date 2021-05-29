@@ -13,14 +13,25 @@ exports.capturePayment = async (req, res) => {
             currency: req.body.currency
         }
     }, function (error, response, body) {
-        console.log('Status:', response.statusCode);
-        console.log('Headers:', JSON.stringify(response.headers));
-        console.log('Response:', body);
-        let Orders = client.db('test').collection('orders');
-        let Cart = client.db('test').collection('cartProducts');
-        Orders.updateOne({ userEmail: req.body.userEmail, paymentID: req.body.paymentId }, { $set: { captureData: JSON.parse(body), userCart: req.body.userCart, userOrders: req.body.userOrders } }, { upsert: true });
-        let cartUserID = req.user._id;
-        Cart.deleteMany({ "user": cartUserID });
+        // console.log('Status:', response.statusCode);
+        // console.log('Headers:', JSON.stringify(response.headers));
+        // console.log('Response:', body);
+        if (!error) {
+            let Orders = client.db('test').collection('orders');
+            let Cart = client.db('test').collection('cartProducts');
+            Orders.updateOne({
+                userEmail: req.body.userEmail,
+                paymentID: req.body.paymentId
+            }, {
+                $set: {
+                    captureData: JSON.parse(body),
+                    userCart: req.body.userCart,
+                    userOrders: req.body.userOrders
+                }
+            }, { upsert: true });
+            let cartUserID = req.user._id;
+            Cart.deleteMany({ "user": cartUserID });
+        }
         res.status(response.statusCode).json({
             data: JSON.parse(body)
         });
