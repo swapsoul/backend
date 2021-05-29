@@ -99,7 +99,7 @@ exports.modifyOrderStatus = async (req, res) => {
 
 exports.getOrdersByUserId = async (req, res) => {
 	try {
-		await Order.find({  }, (err, docs) => {
+		await Order.find({ user: req.user._id }, (err, docs) => {
 			res.json(docs);
 		});
 	} catch (error) {
