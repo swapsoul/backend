@@ -7,7 +7,7 @@ exports.capturePayment = async (req, res) => {
     const client = await MongoClient.connect(db_url, { useNewUrlParser: true, useUnifiedTopology: true });
     request({
         method: 'POST',
-        url: `https://${process.env.rzp_key}:${process.env.rzp_secret}:fS1NAGaj7ifE6yduaPwun413@api.razorpay.com/v1/payments/${req.body.paymentId}/capture`,
+        url: `https://${process.env.rzp_key}:${process.env.rzp_secret}@api.razorpay.com/v1/payments/${req.body.paymentId}/capture`,
         form: {
             amount: req.body.amount,
             currency: req.body.currency
@@ -19,7 +19,7 @@ exports.capturePayment = async (req, res) => {
         let Orders = client.db('test').collection('orders');
         let Cart = client.db('test').collection('cartProducts');
         Orders.updateOne({ userEmail: req.body.userEmail, paymentID: req.body.paymentId }, { $set: { captureData: JSON.parse(body), userCart: req.body.userCart, userOrders: req.body.userOrders } }, { upsert: true });
-        let cartUserID = ObjectId(req.body.userCart[0].user)
+        let cartUserID = req.user._id;
         Cart.deleteMany({ "user": cartUserID });
         res.status(response.statusCode).json({
             data: JSON.parse(body)
