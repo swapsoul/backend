@@ -17,7 +17,7 @@ exports.capturePayment = async (req, res) => {
         console.log('Headers:', JSON.stringify(response.headers));
         console.log('Response:', body);
         let Orders = client.db('test').collection('orders');
-        let Cart = client.db('test').collection('cartProduct');
+        let Cart = client.db('test').collection('cartProducts');
         Orders.updateOne({ userEmail: req.body.userEmail, paymentID: req.body.paymentId }, { $set: { caputureData: JSON.parse(body), userCart: req.body.userCart, userOrders: req.body.userOrders } }, { upsert: true });
         let cartUserID = ObjectId(req.body.userCart[0].user)
         Cart.deleteMany({ "user": cartUserID });
