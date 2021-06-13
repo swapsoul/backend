@@ -1,5 +1,8 @@
 const crypto = require('crypto');
 global.Buffer = require('buffer').Buffer;
+const {OAuth2Client} = require('google-auth-library');
+const client = new OAuth2Client(process.env.GoogleProviderKey);
+
 
 exports.createsha512hash = createsha512hash = (password) => {
     let salt = 'swapsoul';
@@ -44,3 +47,18 @@ exports.createOtp = (length) => {
     }
     return result;
 };
+
+exports.verifySocialUser = (token, callback) => {
+    client.verifyIdToken({
+        idToken: token,
+        audience: process.env.GoogleProviderKey
+    }, (err, login) => {
+        console.log(err, login);
+        if (!err) {
+            const payload = login.getPayload()
+            payload.email_verified ? callback(true, payload) : callback(false, payload);
+        } else {
+            callback(false, null);
+        }
+    });
+}

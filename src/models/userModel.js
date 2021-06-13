@@ -28,7 +28,10 @@ const userSchema = mongoose.Schema({
     verificationOtpTimestamp: String,
     signInMethod: String,
     signUpDate: String,
-    modifiedDate: String
+    modifiedDate: String,
+    name: String,
+    socialId: String,
+    photoUrl: String
 }, { collection: 'users' });
 
 const User = module.exports = mongoose.model('users', userSchema);

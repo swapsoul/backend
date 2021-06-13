@@ -25,28 +25,7 @@ exports.getAllUsers = function (req, res) {
     });
 };
 
-//For creating new user
-exports.addUser = function (req, res) {
-    const token = req.headers['swapsoultoken'];
-    if (!token) {
-        return res.status(400).json({
-            message: 'Bad Request'
-        });
-    }
-    const resp = commonService.decryptToken(token);
-
-    const user = new User();
-    user.userEmail = commonService.isFieldValid(req.body.userEmail) ? req.body.userEmail : commonService.throwError('Invalid Email');
-    user.userName = commonService.isFieldValid(req.body.userName) ? req.body.userName : commonService.throwError('Invalid Username');
-    user.userPassword = resp.hash;
-    user.phoneNumber = commonService.isFieldValid(req.body.phoneNumber) ? req.body.phoneNumber : commonService.throwError('Invalid PhoneNumber');
-    user.userAddress = commonService.isFieldValid(req.body.userAddress) ? req.body.userAddress : [];
-    user.signInMethod = 'email';
-    user.verificationStatus = false;
-    user.signUpDate = new Date().toUTCString();
-    user.modifiedDate = user.signUpDate;
-
-    //Save and check error
+function saveUser(user, res) {
     user.save(function (err) {
         if (err) {
             if (err.name === 'MongoError' && err.code === 11000) {
@@ -93,7 +72,64 @@ exports.addUser = function (req, res) {
             });
         }
     });
+}
+
+//For creating new user
+exports.addUser = function (req, res) {
+    const token = req.headers['swapsoultoken'];
+    if (!token) {
+        return res.status(400).json({
+            message: 'Bad Request'
+        });
+    }
+    const resp = commonService.decryptToken(token);
+
+    const user = new User();
+    user.userEmail = commonService.isFieldValid(req.body.userEmail) ? req.body.userEmail : commonService.throwError('Invalid Email');
+    user.userName = commonService.isFieldValid(req.body.userName) ? req.body.userName : commonService.throwError('Invalid Username');
+    user.userPassword = resp.hash;
+    user.phoneNumber = commonService.isFieldValid(req.body.phoneNumber) ? req.body.phoneNumber : commonService.throwError('Invalid PhoneNumber');
+    user.userAddress = commonService.isFieldValid(req.body.userAddress) ? req.body.userAddress : [];
+    user.signInMethod = 'email';
+    user.verificationStatus = false;
+    user.signUpDate = new Date().toUTCString();
+    user.modifiedDate = user.signUpDate;
+
+    //Save and check error
+    saveUser(user, res);
 };
+
+exports.addUserSocial = (req, res) => {
+    const token = req.headers['swapsoultoken'];
+    if (!token) {
+        return res.status(400).json({
+            message: 'Bad Request'
+        });
+    }
+
+    commonService.verifySocialUser(token, (tokenStatus, _) => {
+        if (tokenStatus) {
+            const user = new User();
+            user.userEmail = req.body.email;
+            user.userName = req.body.email.split('@')[0];
+            user.userPassword = commonService.createsha512hash(req.body.id);
+            user.phoneNumber = '';
+            user.userAddress = [];
+            user.signInMethod = req.body.provider;
+            user.verificationStatus = true;
+            user.signUpDate = new Date().toUTCString();
+            user.modifiedDate = user.signUpDate;
+            user.name = req.body.name;
+            user.socialId = req.body.id;
+            user.photoUrl = req.body.photoUrl;
+            saveUser(user, res);
+        } else {
+            res.status(401).json({
+                message: 'Unauthorised. Invalid Token or Unverified Email'
+            })
+        }
+    });
+}
 
 // Get User by Email or Username
 exports.getUserByUsernameOrEmail = function (req, res) {

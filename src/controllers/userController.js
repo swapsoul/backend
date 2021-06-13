@@ -6,6 +6,9 @@ userRouter.route('/').get(userService.getAllUsers)
     .post(userService.addUser)
     .put(authWrapper.verifyToken, userService.updateUser);
 
+userRouter.route('/social')
+    .post(userService.addUserSocial);
+
 userRouter.route('/:usernameOrEmail').get(authWrapper.verifyTokenForRequestWithoutPayload, userService.getUserByUsernameOrEmail)
     .delete(authWrapper.verifyTokenForRequestWithoutPayload, userService.deleteUserByUsernameOrEmail);
 
